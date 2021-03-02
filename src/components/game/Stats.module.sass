@@ -1,0 +1,54 @@
+@import '../shared/shared.sass'
+@import '../shared/animations.sass'
+
+.statsCtn
+    width: 100%
+    display: flex
+    justify-content: space-around
+    align-items: flex-end
+    padding-left: $FONT-SIZE
+    padding-right: $FONT-SIZE
+    padding-left: 45%
+
+.speedInd
+    color: var(--text-secondary)
+    display: flex
+
+.speedText
+    font-size: 1.7 * $FONT-SIZE
+
+.speedUnit
+    text-align: right
+    display: flex
+    flex-direction: column
+    justify-content: flex-end
+    padding-bottom: 0.3 * $FONT-SIZE
+    margin-left: 0.3 * $FONT-SIZE
+    >:first-child
+        font-size: 0.55 * $FONT-SIZE
+
+    >:nth-child(2)
+        text-align: right
+        font-size: 0.7 * $FONT-SIZE
+
+.timerWrapper
+    display: flex
+    flex-direction: column
+    justify-content: space-around
+    position: relative
+
+.timer
+    color: var(--text-secondary)
+    line-height: 1.7 * $FONT-SIZE
+    font-size: 1.5 * $FONT-SIZE
+    padding-bottom: 0.2 * $FONT-SIZE
+
+.showStats
+    position: absolute
+    right: 0
+    text-align: right
+    animation: slideInRight 0.5s ease
+    &:hover
+        cursor: pointer
+        color: var(--text-disabled)
+    // right: 0
