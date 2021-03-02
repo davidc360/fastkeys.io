@@ -10,4 +10,8 @@ Useful metrics provided:
 * React JS
 * Redux
 * React Router
-* SASS
+* SASS  
+
+# Live demo  
+
+https://types.ink/
