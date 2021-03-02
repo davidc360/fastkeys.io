@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styles from "./Nav.module.sass"
 import { setTheme } from '../../ducks/modules/UI'
 
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 export default function () {
     const dispatch = useDispatch()
