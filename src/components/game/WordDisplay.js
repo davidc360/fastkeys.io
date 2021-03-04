@@ -21,10 +21,11 @@ import {
 import axios from "axios"
 
 export default function WordDisplay({ gameId }) {
-    const dispatch = useDispatch()
-    const numRows  = useSelector(state => state.settings.numRows)
-    const WordRows = []
-
+    const dispatch  = useDispatch()
+    const numRows   = useSelector(state => state.settings.numRows)
+    const rowNum    = useSelector(state => state.game.rowNum)
+    const oppWords  = useSelector(state => state.game.opponentWords)
+    const WordRows  = []
 
     // set Opponent positions
     useEffect(() => {
@@ -37,7 +38,7 @@ export default function WordDisplay({ gameId }) {
                 if (res.data !== null) {
                     for (const positions of res.data.se) {
                         setTimeout(() => {
-                            dispatch(setOpponentPos(positions.p))
+                            dispatch(setOpponentPos(positions.p, positions.r))
                         }, positions.t)
                     } 
                 }
@@ -51,7 +52,7 @@ export default function WordDisplay({ gameId }) {
 
     for (let i = 0;  i < numRows; i++) {
         WordRows.push(
-            <WordRow key={i} row={i} /> 
+            <WordRow key={i} row={i} words={oppWords[rowNum]}/> 
         )
     }
     return (
@@ -66,9 +67,11 @@ function WordRow({ row }) {
     const activeRow      = useSelector(state => state.game.activeRow)
     const active         = (row === activeRow)
     const gameInProgress = useSelector(state => state.game.gameInProgress)
-
+    const rowNum         = useSelector(state => state.game.rowNum)
+    
     const withCaps       = useSelector(state => state.settings.withCaps)
     const withPunc       = useSelector(state => state.settings.withPunc)
+
     const INIT_WORDS_CONF = {
         num: 30,
         withSpace: true,
@@ -193,16 +196,17 @@ function WordRow({ row }) {
                 }
             }
         }
-        dispatch(addPosSeq(nextWordPos.current.pos))
+        dispatch(addPosSeq(nextWordPos.current.pos, rowNum))
         dispatch(setTypedWords(newWords))
     }
 
     
     const nextWordPos = useRef({ word: 0, letter: 0, pos: 0})
     const curCorNums = useRef({ whole: 0, partial: 0 })
+
     // add to pos sequence every time the current letter position changes
     useEffect(() => {
-        dispatch(addPosSeq(nextWordPos.current.pos))
+        // dispatch(addPosSeq(nextWordPos.current.pos, rowNum))
         dispatch(setTypedFullWords(words.slice(0, typedWords.length)))
     }, [nextWordPos.current.pos])
 

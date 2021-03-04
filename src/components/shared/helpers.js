@@ -114,12 +114,12 @@ function isLetter(letter) {
 
 // transform a set of words to shorter codes of the index of the word in the wordset,
 // punctuation, capitalization
-export function wordsetToCodes(words) {
+export function wordsetToCodes(wordRows) {
     // if word indexes haven't been initialized
     if (Object.entries(WORDSET_INDEXES).length === 0)
         initializeWordsetIndexes()
-    
-    return words.map(word => wordToCode(word))
+
+    return wordRows.map(wordRow => wordRow.map(word => wordToCode(word)))
 }
 
 function wordToCode(word) {

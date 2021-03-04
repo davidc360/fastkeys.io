@@ -42,6 +42,13 @@ export default function () {
 
     function createLink(e) {
         const wordsTypedCodes = wordsetToCodes(typedFullWords)
+        console.log({
+            username: username,
+            sequence: positionSequence,
+            mode: { withPunc, withCaps },
+            words: wordsTypedCodes,
+            stats: { speed, accuracy }
+        })
         axios.post('http://127.0.0.1:5000/game', {
             username: username,
             sequence: positionSequence,
@@ -85,7 +92,7 @@ export default function () {
     function CreateLink() {
         return (
             <div className={styles.createLinkCtn}>
-                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name" maxLength={40} value={username}/>
+                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} value={username}/>
                 <div className={styles.createLink} onClick={createLink}>Create & Copy Link</div>
             </div>
         )

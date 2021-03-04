@@ -29,6 +29,7 @@ export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
 const initialState = {
     // words           : [],
     activeRow       : 0,
+    rowNum          : 0,
     gameInProgress  : false,
     typedWords      : { current: [], total: [], full: [], fullTotal: []},
     currentFocus    : { pos: {} },
@@ -37,7 +38,8 @@ const initialState = {
     incorrectLetters: { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
     speed           : { whole: 0, partial: 0, top: 0 },
     timer           : { start: null, elapsed: 0 },
-    positionSequence: []
+    positionSequence: [],
+    opponentWords   : []
 }
 
 const reducer = produce((draft, action = {}) => {
@@ -65,6 +67,7 @@ const reducer = produce((draft, action = {}) => {
 
         case ICR_ACTIVE_ROW:
             draft.activeRow = (draft.activeRow + 1) % action.numRows
+            draft.rowNum++
             return
 
         case SET_TYPED_WORDS:
@@ -77,7 +80,8 @@ const reducer = produce((draft, action = {}) => {
 
         case ADD_TYPED_TO_TOTAL:
             draft.typedWords.total = [...draft.typedWords.total, ...draft.typedWords.current]
-            draft.typedWords.fullTotal = [...draft.typedWords.fullTotal, ...draft.typedWords.full]
+            // delete last word from full typed because it is added from being used to detect next row
+            draft.typedWords.fullTotal.push(draft.typedWords.full.slice(0, -1))
             return
 
         case SET_CUR_FOCUS_POS:
@@ -86,12 +90,13 @@ const reducer = produce((draft, action = {}) => {
 
         case UPDATE_ACCURACY:
             const typedLength = draft.typedWords.total.join('').length
-            let incLength = 0
-            let incLetters = draft.incorrectLetters.forgetting
-            for (let letter in incLetters)
-               incLength += incLetters[letter] 
-               console.log(typedLength, incLength)
-            draft.accuracy = Math.max(0, (typedLength - incLength) / typedLength)
+            // let incLength = 0
+            // let incLetters = draft.incorrectLetters.forgetting
+            // for (let letter in incLetters)
+            //    incLength += incLetters[letter] 
+            //    console.log(typedLength, incLength)
+            const corNum = draft.correctNums.current.partial
+            draft.accuracy = Math.max(0, corNum / typedLength)
             return
 
         case SET_CORRECT_NUMS:
@@ -140,11 +145,12 @@ const reducer = produce((draft, action = {}) => {
             return
         
         case SET_OPPONENT_POS:
-            draft.opponentPos = action.pos
+            draft.opponentPos = { pos: action.pos, row: action.row }
             return
         
         case ADD_POS_SEQ:
             draft.positionSequence.push({
+                r: action.row,
                 p: action.pos,
                 t: draft.timer.elapsed
             })
@@ -246,14 +252,16 @@ export const resetGame = () => ({
     type: RESET_GAME
 })
 
-export const setOpponentPos = pos => ({
+export const setOpponentPos = (pos, row) => ({
     type: SET_OPPONENT_POS,
-    pos: pos
+    pos: pos,
+    row: row
 })
 
-export const addPosSeq = pos => ({
+export const addPosSeq = (pos, row) => ({
     type: ADD_POS_SEQ,
-    pos: pos
+    pos: pos,
+    row: row
 })
 
 export const setTypedFullWords = words => ({
@@ -265,6 +273,12 @@ export const setOppName = name => ({
     type: SET_DATA,
     key: 'oppName',
     value: name
+})
+
+export const setOppWords = words => ({
+    type: SET_DATA,
+    key: 'opponentWords',
+    value: words
 })
 
 
