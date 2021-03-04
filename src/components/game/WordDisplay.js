@@ -111,14 +111,14 @@ function WordRow({ row }) {
 
     // set Opponent positions
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/game/9c41')
-            .then(res => {
-                for (const positions of res.data?.seq) {
-                    setTimeout(() => {
-                        setOppPos(positions.p)
-                    }, positions.t)
-                } 
-            })
+        // axios.get('http://127.0.0.1:5000/game/9c41')
+        //     .then(res => {
+        //         for (const positions of res.data?.seq) {
+        //             setTimeout(() => {
+        //                 setOppPos(positions.p)
+        //             }, positions.t)
+        //         } 
+        //     })
     }, [])
 
     function handleKeyDown(e) {

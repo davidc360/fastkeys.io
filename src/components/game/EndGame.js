@@ -5,10 +5,18 @@ import { QuestionIcon, RestartIcon } from '../shared/Icons'
 import { resetGame } from '../../ducks/modules/game'
 import { setUsername } from '../../ducks/modules/settings'
 import axios from "axios"
+import { wordsetToCodes } from "../shared/helpers"
 
 export default function () {
     const username = useSelector(state => state.settings.username)
     const positionSequence = useSelector(state => state.game.positionSequence)
+    const typedFullWords = useSelector(state => state.game.typedWords.fullTotal)
+
+    const speed = useSelector((state) => state.game.speed.partial)
+    const accuracy = useSelector(state => state.game.accuracy)
+
+    const withCaps = useSelector(state => state.settings.withCaps)
+    const withPunc = useSelector(state => state.settings.withPunc)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -33,10 +41,54 @@ export default function () {
     }
 
     function createLink(e) {
+        const wordsTypedCodes = wordsetToCodes(typedFullWords)
         axios.post('http://127.0.0.1:5000/game', {
             username: username,
-            sequence: positionSequence
+            sequence: positionSequence,
+            mode: { withPunc, withCaps },
+            words: wordsTypedCodes,
+            stats: { speed, accuracy }
         })
+    }
+
+    function Mode() {
+        return (
+            <div className={styles.modeCtn}>
+                 With capitalization: {withCaps.toString()} <br/>
+                 With punctuation: {withPunc.toString()}
+            </div>
+        )
+    }
+    
+
+    function Stats() {
+        return (
+            <div className={styles.statCtn}>
+                <div className={`${styles.speedCtn} ${styles.alignBtmCtn}`}>
+                    <span className={`${styles.speedText} ${styles.alignBtmText}`}>{Math.floor(speed)}</span>
+                    <span className={styles.speedUnit}>WPM</span>
+                </div>
+                <div className={`${styles.accCtn}`}>
+                        <ToolTip
+                            classNames={styles.adjLabel}
+                            tooltext={'If you missed a key and corrected it, it shall not count against you.'}
+                        >
+                            (adjusted) <QuestionIcon /> 
+                        </ToolTip>      
+                    <div className={`${styles.accLabel}`}>Accuracy</div>
+                    <div className={`${styles.accNum}`}>{Math.floor(accuracy * 100)}<span className={styles.percent}>%</span></div>
+                </div>
+            </div>
+        )
+    }
+
+    function CreateLink() {
+        return (
+            <div className={styles.createLinkCtn}>
+                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name" maxLength={40} value={username}/>
+                <div className={styles.createLink} onClick={createLink}>Create & Copy Link</div>
+            </div>
+        )
     }
 
     return (
@@ -52,49 +104,12 @@ export default function () {
             </div>
             <Stats />
             <Mode />
-            <div className={styles.createLinkCtn}>
-                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name" maxLength={40} value={username}/>
-                <div className={styles.createLink} onClick={createLink}>Create & Copy Link</div>
-            </div>
+            <CreateLink />
             <WrongKeys />
         </div>
     );
 }
 
-function Stats() {
-    const speed = useSelector((state) => state.game.speed.partial)
-    const accuracy = useSelector(state => state.game.accuracy)
-    return (
-        <div className={styles.statCtn}>
-            <div className={`${styles.speedCtn} ${styles.alignBtmCtn}`}>
-                <span className={`${styles.speedText} ${styles.alignBtmText}`}>{Math.floor(speed)}</span>
-                <span className={styles.speedUnit}>WPM</span>
-            </div>
-            <div className={`${styles.accCtn}`}>
-                    <ToolTip
-                        classNames={styles.adjLabel}
-                        tooltext={'If you missed a key and corrected it, it shall not count against you.'}
-                    >
-                        (adjusted) <QuestionIcon /> 
-                    </ToolTip>      
-                <div className={`${styles.accLabel}`}>Accuracy</div>
-                <div className={`${styles.accNum}`}>{Math.floor(accuracy * 100)}<span className={styles.percent}>%</span></div>
-            </div>
-        </div>
-    )
-}
-
-function Mode() {
-    const withCaps = useSelector(state => state.settings.withCaps)
-    const withPunc = useSelector(state => state.settings.withPunc)
-    
-    return (
-        <div className={styles.modeCtn}>
-             With capitalization: {withCaps.toString()} <br/>
-             With punctuation: {withPunc.toString()}
-        </div>
-    )
-}
 
 function ToolTip({ children, tooltext, classNames, childClassNames }) {
     const [pos, setPos] = useState()

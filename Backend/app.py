@@ -35,8 +35,11 @@ def post_game():
         doc = {}
         params = request.get_json()
         doc['usr'] = params.get('username')
-        doc['seq'] = params.get('sequence')
-        doc['id'] = format(gamesdb.find().count()+40000, 'x')
+        doc['se'] = params.get('sequence')
+        doc['ws'] = params.get('words')
+        doc['st'] = params.get('stats')
+        doc['m'] = params.get('mode')
+        doc['id'] = format(gamesdb.estimated_document_count()+40000, 'x')
         gamesdb.insert_one(doc)
         return Response(status=200)
 
