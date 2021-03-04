@@ -34,16 +34,16 @@ def post_game():
     if request.method == 'POST':
         doc = {}
         params = request.get_json()
-        doc['username'] = params.get('username')
-        doc['sequence'] = params.get('sequence')
-        doc['game_id'] = format(gamesdb.find().count()+40000, 'x')
+        doc['usr'] = params.get('username')
+        doc['seq'] = params.get('sequence')
+        doc['id'] = format(gamesdb.find().count()+40000, 'x')
         gamesdb.insert_one(doc)
         return Response(status=200)
 
 @app.route('/game/<game_id>', methods=['GET', 'DELETE'])
 def return_game(game_id=None):
     if request.method == 'GET':
-        game = gamesdb.find_one({"game_id": game_id})
+        game = gamesdb.find_one({"id": game_id})
         return json.dumps(game, default=str)
 
 
