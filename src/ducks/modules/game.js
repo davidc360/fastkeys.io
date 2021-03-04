@@ -134,8 +134,8 @@ const reducer = produce((draft, action = {}) => {
         
         case ADD_POS_SEQ:
             draft.positionSequence.push({
-                pos: action.pos,
-                time: draft.timer.elapsed
+                p: action.pos,
+                t: draft.timer.elapsed
             })
         
         case RESET_INC_BUFFER:

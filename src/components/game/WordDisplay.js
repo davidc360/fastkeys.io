@@ -108,22 +108,14 @@ function WordRow({ row }) {
         }
     })
 
-    let oppPos = [
-        {pos: 1, time: 500},
-        {pos: 2, time: 800},
-        {pos: 3, time: 1500},
-        {pos: 4, time: 2500},
-        {pos: 5, time: 3500},
-    ]
-
     // set Opponent positions
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/game/9c40')
+        axios.get('http://127.0.0.1:5000/game/9c41')
             .then(res => {
-                for (const positions of res.data.sequence) {
+                for (const positions of res.data?.seq) {
                     setTimeout(() => {
-                        setOppPos(positions.pos)
-                    }, positions.time)
+                        setOppPos(positions.p)
+                    }, positions.t)
                 } 
             })
     }, [])
@@ -194,6 +186,7 @@ function WordRow({ row }) {
     useEffect(() => {
         dispatch(addPosSeq(nextWordPos.current.pos))
     }, [nextWordPos.current.pos])
+
     // set current correct num of words
     useEffect(() => {
         if (!active) return
