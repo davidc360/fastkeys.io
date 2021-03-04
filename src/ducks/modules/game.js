@@ -3,10 +3,8 @@ import produce from 'immer'
 export const START_GAME             = 'STARTED_GAME'
 export const END_GAME               = 'ENDED_GAME'
 export const RESET_GAME             = 'RESET_GAME'
-
 export const ICR_ACTIVE_ROW         = 'ICR_ACTIVE_ROW'
-export const SET_TYPED_WORDS        = 'SET_TYPED_WORDS'
-export const ADD_TYPED_TO_TOTAL     = 'ADD_TYPED_TO_TOTAL'
+// export const SET_WORDS              = 'SET_WORDS'
 
 export const SET_CUR_FOCUS_POS      = 'SET_CUR_FOCUS_POS'
 
@@ -14,20 +12,24 @@ export const UPDATE_ELAPSED         = 'UPDATED_ELAPSED'
 export const UPDATE_ACCURACY        = 'UPDATED_ACCURACY'
 export const UPDATE_PARTIAL_SPEED   = 'UPDATED_PARTIAL_SPEED'
 
+export const SET_LAST_WAS_INC       = 'SET_LAST_WAS_INC'
+export const RESET_INC_BUFFER       = "RESET_INC_BUFFER"
+export const SET_CUR_INC_LETTERS    = 'SET_CUR_INC_LETTERS'
 export const SET_CORRECT_NUMS       = 'SET_CORRECT_NUMS'
 export const RESET_LAST_CORNUMS     = 'RESET_LAST_CORNUMS'
 export const ADD_NONFORG_INC_LETTER = 'ADD_NONFORG_INC_LETTER'
-export const SET_CUR_INC_LETTERS    = 'SET_CUR_INC_LETTERS'
-export const SET_LAST_WAS_INC       = 'SET_LAST_WAS_INC'
-export const RESET_INC_BUFFER       = "RESET_INC_BUFFER"
 
 // export const SET_OPPONENT_POS       = 'SET_OPPONENT_POS'
-export const ADD_POS_SEQ            = 'ADD_POS_SEQ'
+export const ADD_POS_SEQ                 = 'ADD_POS_SEQ'
+export const SET_TYPED_WORDS             = 'SET_TYPED_WORDS'
+export const ADD_TYPED_TO_TOTAL          = 'ADD_TYPED_TO_TOTAL'
+export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
 
 const initialState = {
+    // words           : [],
     activeRow       : 0,
     gameInProgress  : false,
-    typedWords      : { current: [], total: [] },
+    typedWords      : { current: [], total: [], full: [], fullTotal: []},
     currentFocus    : { pos: {} },
     accuracy        : 0,
     correctNums     : { current: { whole: 0, partial: 0 }, last: { whole: 0, partial: 0 } },
@@ -57,6 +59,10 @@ const reducer = produce((draft, action = {}) => {
             localStorage.setItem('stats_incorrect_letters', JSON.stringify(locStats))
             return
 
+        // case SET_WORDS:
+        //     draft.words = action.words
+        //     return
+
         case ICR_ACTIVE_ROW:
             draft.activeRow = (draft.activeRow + 1) % action.numRows
             return
@@ -65,8 +71,13 @@ const reducer = produce((draft, action = {}) => {
             draft.typedWords.current = action.words
             return
 
+        case SET_TYPED_FULL_WORDS:
+            draft.typedWords.full = action.words
+            return
+
         case ADD_TYPED_TO_TOTAL:
             draft.typedWords.total = [...draft.typedWords.total, ...draft.typedWords.current]
+            draft.typedWords.fullTotal = [...draft.typedWords.fullTotal, ...draft.typedWords.full]
             return
 
         case SET_CUR_FOCUS_POS:
@@ -166,6 +177,11 @@ export const endGame = () => ({
     type: END_GAME
 })
 
+// export const setWords = words => ({
+//     type: SET_WORDS,
+//     words: words
+// })
+
 export const icrActiveRow = (numRows) => ({
     type: ICR_ACTIVE_ROW,
     numRows: numRows
@@ -239,6 +255,13 @@ export const addPosSeq = pos => ({
     type: ADD_POS_SEQ,
     pos: pos
 })
+
+export const setTypedFullWords = words => ({
+    type: SET_TYPED_FULL_WORDS,
+    words: words
+})
+
+
 
 
 export default reducer

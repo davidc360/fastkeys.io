@@ -12,8 +12,9 @@ import {
     setIncorrectLetters,
     setLastWasInc,
     setCurFocusPos,
+    addPosSeq,
     setTypedWords,
-    addPosSeq
+    setTypedFullWords
 } from "../../ducks/modules/game"
 import axios from "axios"
 
@@ -185,6 +186,7 @@ function WordRow({ row }) {
     // add to pos sequence every time the current letter position changes
     useEffect(() => {
         dispatch(addPosSeq(nextWordPos.current.pos))
+        dispatch(setTypedFullWords(words.slice(0, typedWords.length)))
     }, [nextWordPos.current.pos])
 
     // set current correct num of words
