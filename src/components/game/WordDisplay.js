@@ -13,7 +13,7 @@ import {
     setLastWasInc,
     setCurFocusPos,
     setTypedWords,
-    setOpponentPos
+    addPosSeq
 } from "../../ducks/modules/game"
 
 export default function WordDisplay() {
@@ -96,7 +96,8 @@ function WordRow({ row }) {
     const limitInputWord = useSelector(state => state.settings.limitInputWord)
     const lastWasInc     = useSelector(state => state.game.incorrectLetters.lastWasInc)
     const typedWords     = useSelector(state => state.game.typedWords.current)
-    const opponentPos    = useSelector(state => state.game.opponentPos)
+    const [opponentPos, setOppPos]    = useState(0)
+    
     const resetTyped = () => setTypedWords([])
     //set key listener
     useEffect(() => {
@@ -105,16 +106,22 @@ function WordRow({ row }) {
             window.removeEventListener("keydown", handleKeyDown)
         }
     })
+
+    let oppPos = [
+        {pos: 1, time: 500},
+        {pos: 2, time: 800},
+        {pos: 3, time: 1500},
+        {pos: 4, time: 2500},
+        {pos: 5, time: 3500},
+    ]
+
+    // set Opponent positions
     useEffect(() => {
-        let i = 0
-        setTimeout(() => {
-            dispatch(setOpponentPos(i + 1))
-            i++
-        }, 500)
-        setTimeout(() => {
-            dispatch(setOpponentPos(i + 1))
-            i++
-        }, 1000)
+        for (const positions of oppPos) {
+            setTimeout(() => {
+                setOppPos(positions.pos)
+            }, positions.time)
+        } 
     }, [])
     function handleKeyDown(e) {
         let newWords = [...typedWords]
@@ -123,8 +130,10 @@ function WordRow({ row }) {
 
         const curWordLength = words[curTypedWi].length
 
+        let positionChange = 0
+
+        // key.length === 1 means it's a single letter pressed, including space
         if (e.key.length === 1) {
-            
             const letIdx = newWords[curTypedWi]?.length ?? 0
             const curLet = words[curTypedWi][letIdx]
 
@@ -153,8 +162,9 @@ function WordRow({ row }) {
                 dispatch(setShowSettings(false))
                 dispatch(startGame(Date.now(), timeMode))
             }
-        } else if (e.keyCode === 8) {
+        
             // 8 === back space
+        } else if (e.keyCode === 8) {
             if (e.metaKey) {
                 newWords = []
             } else if (e.altKey) {
@@ -168,12 +178,18 @@ function WordRow({ row }) {
                 }
             }
         }
+        dispatch(addPosSeq(nextWordPos.current.pos))
         dispatch(setTypedWords(newWords))
     }
 
-    const nextWordPos = useRef({ word: 0, letter: 0 })
+    
+    const nextWordPos = useRef({ word: 0, letter: 0, pos: 0})
     const curCorNums = useRef({ whole: 0, partial: 0 })
-    //set current correct num of words
+    // add to pos sequence every time the current letter position changes
+    useEffect(() => {
+        dispatch(addPosSeq(nextWordPos.current.pos))
+    }, [nextWordPos.current.pos])
+    // set current correct num of words
     useEffect(() => {
         if (!active) return
         dispatch(setCorrectNums(curCorNums.current))
@@ -200,15 +216,17 @@ function WordRow({ row }) {
             const lastWord = words[wi - 1]
             const wordEl = (
                 <WordWrapper key={wi}>
-                    {[...word].map((letter, li) => {
+                    {
+                        // li = letter index
+                        [...word].map((letter, li) => {
                         let isNextFocus
                         if (li > 0) {
-                            const liIsLast = li === word.length - 1
+                            const letterIsLast = li === word.length - 1
                             if (wi === curTypedWi)
-                                isNextFocus = ( li === curTypedWord?.length) || (liIsLast && curTypedWord?.length > li)
+                                isNextFocus = ( li === curTypedWord?.length) || (letterIsLast && curTypedWord?.length > li)
                         } else {
                             isNextFocus = (wi === curTypedWi && curTypedWord.length === 0)
-                        } 
+                        }
                         const isCorrect = (letter === typedWords[wi]?.charAt(li))
                         const isTyped = typedWords[wi]?.charAt(li) ? true : false
                         const shouldEval =  (isTyped || curTypedWi > wi) ? true : false
@@ -224,7 +242,8 @@ function WordRow({ row }) {
                         )
                         letCnt++
                         if (isNextFocus) {
-                            nextWordPos.current = { word: wi, letter: li }
+                            nextWordPos.current = { word: wi, letter: li, pos: letCnt-1 }
+                            // setNextLetPos(letCnt)
                             wordHasFocus = true
                         }
                         if (isCorrect) {

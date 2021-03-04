@@ -34,7 +34,7 @@ function Timer() {
     const dispatch = useDispatch()
     const timeMode = useSelector(state => state.settings.timeMode)
     const elapsed = useSelector(state => state.game.timer.elapsed)
-    const timeLeft = Math.round(timeMode - elapsed)
+    const timeLeft = Math.round(timeMode - elapsed/1000)
     return (
         <div className={styles.timerWrapper}>
         <div className={styles.timer}>

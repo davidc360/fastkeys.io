@@ -2,21 +2,27 @@ import produce from 'immer'
 
 export const START_GAME             = 'STARTED_GAME'
 export const END_GAME               = 'ENDED_GAME'
+export const RESET_GAME             = 'RESET_GAME'
+
 export const ICR_ACTIVE_ROW         = 'ICR_ACTIVE_ROW'
 export const SET_TYPED_WORDS        = 'SET_TYPED_WORDS'
-export const SET_CUR_FOCUS_POS      = 'SET_CUR_FOCUS_POS'
 export const ADD_TYPED_TO_TOTAL     = 'ADD_TYPED_TO_TOTAL'
+
+export const SET_CUR_FOCUS_POS      = 'SET_CUR_FOCUS_POS'
+
+export const UPDATE_ELAPSED         = 'UPDATED_ELAPSED'
 export const UPDATE_ACCURACY        = 'UPDATED_ACCURACY'
+export const UPDATE_PARTIAL_SPEED   = 'UPDATED_PARTIAL_SPEED'
+
 export const SET_CORRECT_NUMS       = 'SET_CORRECT_NUMS'
 export const RESET_LAST_CORNUMS     = 'RESET_LAST_CORNUMS'
 export const ADD_NONFORG_INC_LETTER = 'ADD_NONFORG_INC_LETTER'
 export const SET_CUR_INC_LETTERS    = 'SET_CUR_INC_LETTERS'
 export const SET_LAST_WAS_INC       = 'SET_LAST_WAS_INC'
-export const UPDATE_PARTIAL_SPEED   = 'UPDATED_PARTIAL_SPEED'
 export const RESET_INC_BUFFER       = "RESET_INC_BUFFER"
-export const UPDATE_ELAPSED         = 'UPDATED_ELAPSED'
-export const SET_OPPONENT_POS       = 'SET_OPPONENT_POS'
-export const RESET_GAME             = 'RESET_GAME'
+
+// export const SET_OPPONENT_POS       = 'SET_OPPONENT_POS'
+export const ADD_POS_SEQ            = 'ADD_POS_SEQ'
 
 const initialState = {
     activeRow       : 0,
@@ -28,7 +34,8 @@ const initialState = {
     incorrectLetters: { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
     speed           : { whole: 0, partial: 0, top: 0 },
     timer           : { start: null, elapsed: 0 },
-    opponentPos     : 0
+    opponentPos     : 0,
+    positionSequence: []
 }
 
 const reducer = produce((draft, action = {}) => {
@@ -121,9 +128,15 @@ const reducer = produce((draft, action = {}) => {
             draft.incorrectLetters.lastBuffer = { ...action.obj }
             return
         
-        case SET_OPPONENT_POS:
-            draft.opponentPos = action.pos
-            return
+        // case SET_OPPONENT_POS:
+        //     draft.opponentPos = action.pos
+        //     return
+        
+        case ADD_POS_SEQ:
+            draft.positionSequence.push({
+                pos: action.pos,
+                time: draft.timer.elapsed
+            })
         
         case RESET_INC_BUFFER:
             draft.incorrectLetters.lastBuffer = {}
@@ -131,7 +144,7 @@ const reducer = produce((draft, action = {}) => {
 
         case UPDATE_PARTIAL_SPEED:
             if(draft.timer.elapsed > 0)
-                draft.speed.partial = (draft.correctNums.current.partial / 5) / draft.timer.elapsed * 60
+                draft.speed.partial = (draft.correctNums.current.partial / 5) / (draft.timer.elapsed/1000) * 60
             return
 
         case UPDATE_ELAPSED:
@@ -217,8 +230,13 @@ export const resetGame = () => ({
     type: RESET_GAME
 })
 
-export const setOpponentPos = pos => ({
-    type: SET_OPPONENT_POS,
+// export const setOpponentPos = pos => ({
+//     type: SET_OPPONENT_POS,
+//     pos: pos
+// })
+
+export const addPosSeq = pos => ({
+    type: ADD_POS_SEQ,
     pos: pos
 })
 

@@ -50,8 +50,6 @@ export default function Game() {
                     <WordDisplay />
                     <Stats />
                 </> : <EndGame />}
-                {/* <EndGame /> */}
-
                 <ScrollIndicator />
             </div>
         </BrowserView>

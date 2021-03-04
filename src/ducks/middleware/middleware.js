@@ -32,11 +32,11 @@ export default (store) => (next) => (action) => {
 
             const dispatchUpdateSpeed = () => dispatch(updatePartialSpeed())
             const dispatchUpdateElapsed = () => {
-                let elapsed = (Date.now() - action.startTime) / 1000
+                let elapsed = Date.now() - action.startTime 
                 dispatch(updateElapsed(elapsed))
                 return elapsed
             }
-            const checkForGameEnd = (elapsed) => {if (elapsed >= action.duration) dispatch(endGame())}
+            const checkForGameEnd = (elapsed) => {if (elapsed >= action.duration*1000) dispatch(endGame())}
             
             const updateStates = _pipe(
                 dispatchUpdateSpeed,
