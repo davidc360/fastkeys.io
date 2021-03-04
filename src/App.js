@@ -17,6 +17,7 @@ function App() {
                     <Nav />
                     <Switch>    
                         <Route exact path='/' component={Game} />
+                        <Route exact path='/game/:gameId' component={Game} />
                         <Route path='*' component={()=>(<div>Oh no!!!! Page not found.</div>)} />
                     </Switch>
                     </div>

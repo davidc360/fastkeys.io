@@ -13,6 +13,7 @@ import { windowIsScrollable } from '../shared/helpers'
 import { setScrollable } from '../../ducks/modules/UI'
 import { resetGame } from '../../ducks/modules/game'
 
+import { useParams } from 'react-router-dom'
 import { BrowserView, MobileView } from "react-device-detect"
 
 export default function Game() {
@@ -20,6 +21,8 @@ export default function Game() {
     const gameInProgress = useSelector(state => state.game.gameInProgress)
     const startTime = useSelector(state => state.game.timer.start)
     const gameStarted = startTime !== null
+
+    const { gameId } = useParams()
    
     useEffect(set_scroll_listener => {
         function handleScroll(e) {
@@ -47,7 +50,7 @@ export default function Game() {
                 <Settings />
                 {!gameStarted || gameInProgress ?
                 <>
-                    <WordDisplay />
+                    <WordDisplay gameId={gameId}/>
                     <Stats />
                 </> : <EndGame />}
                 <ScrollIndicator />

@@ -4,6 +4,7 @@ export const START_GAME             = 'STARTED_GAME'
 export const END_GAME               = 'ENDED_GAME'
 export const RESET_GAME             = 'RESET_GAME'
 export const ICR_ACTIVE_ROW         = 'ICR_ACTIVE_ROW'
+export const SET_DATA               = 'SET_DATA'
 // export const SET_WORDS              = 'SET_WORDS'
 
 export const SET_CUR_FOCUS_POS      = 'SET_CUR_FOCUS_POS'
@@ -19,7 +20,7 @@ export const SET_CORRECT_NUMS       = 'SET_CORRECT_NUMS'
 export const RESET_LAST_CORNUMS     = 'RESET_LAST_CORNUMS'
 export const ADD_NONFORG_INC_LETTER = 'ADD_NONFORG_INC_LETTER'
 
-// export const SET_OPPONENT_POS       = 'SET_OPPONENT_POS'
+export const SET_OPPONENT_POS            = 'SET_OPPONENT_POS'
 export const ADD_POS_SEQ                 = 'ADD_POS_SEQ'
 export const SET_TYPED_WORDS             = 'SET_TYPED_WORDS'
 export const ADD_TYPED_TO_TOTAL          = 'ADD_TYPED_TO_TOTAL'
@@ -36,7 +37,6 @@ const initialState = {
     incorrectLetters: { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
     speed           : { whole: 0, partial: 0, top: 0 },
     timer           : { start: null, elapsed: 0 },
-    opponentPos     : 0,
     positionSequence: []
 }
 
@@ -59,9 +59,9 @@ const reducer = produce((draft, action = {}) => {
             localStorage.setItem('stats_incorrect_letters', JSON.stringify(locStats))
             return
 
-        // case SET_WORDS:
-        //     draft.words = action.words
-        //     return
+        case SET_DATA:
+            draft[action.key] = action.value
+            return
 
         case ICR_ACTIVE_ROW:
             draft.activeRow = (draft.activeRow + 1) % action.numRows
@@ -139,9 +139,9 @@ const reducer = produce((draft, action = {}) => {
             draft.incorrectLetters.lastBuffer = { ...action.obj }
             return
         
-        // case SET_OPPONENT_POS:
-        //     draft.opponentPos = action.pos
-        //     return
+        case SET_OPPONENT_POS:
+            draft.opponentPos = action.pos
+            return
         
         case ADD_POS_SEQ:
             draft.positionSequence.push({
@@ -246,10 +246,10 @@ export const resetGame = () => ({
     type: RESET_GAME
 })
 
-// export const setOpponentPos = pos => ({
-//     type: SET_OPPONENT_POS,
-//     pos: pos
-// })
+export const setOpponentPos = pos => ({
+    type: SET_OPPONENT_POS,
+    pos: pos
+})
 
 export const addPosSeq = pos => ({
     type: ADD_POS_SEQ,
@@ -261,7 +261,11 @@ export const setTypedFullWords = words => ({
     words: words
 })
 
-
+export const setOppName = name => ({
+    type: SET_DATA,
+    key: 'oppName',
+    value: name
+})
 
 
 export default reducer

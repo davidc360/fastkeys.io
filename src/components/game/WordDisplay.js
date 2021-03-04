@@ -14,13 +14,41 @@ import {
     setCurFocusPos,
     addPosSeq,
     setTypedWords,
-    setTypedFullWords
+    setTypedFullWords,
+    setOpponentPos,
+    setOppName
 } from "../../ducks/modules/game"
 import axios from "axios"
 
-export default function WordDisplay() {
-    const numRows = useSelector(state => state.settings.numRows)
+export default function WordDisplay({ gameId }) {
+    const dispatch = useDispatch()
+    const numRows  = useSelector(state => state.settings.numRows)
     const WordRows = []
+
+
+    // set Opponent positions
+    useEffect(() => {
+        if (gameId !== undefined) {
+            axios.get('http://127.0.0.1:5000/game/' + gameId)
+            .then(res => {
+                console.log(res)
+                dispatch(setOppName(res.data.usr))
+                // if game is found in db
+                if (res.data !== null) {
+                    for (const positions of res.data.se) {
+                        setTimeout(() => {
+                            dispatch(setOpponentPos(positions.p))
+                        }, positions.t)
+                    } 
+                }
+            })
+        }
+    }, [])
+
+    useEffect(() => {
+        console.log(gameId)
+    }, [])
+
     for (let i = 0;  i < numRows; i++) {
         WordRows.push(
             <WordRow key={i} row={i} /> 
@@ -98,7 +126,8 @@ function WordRow({ row }) {
     const limitInputWord = useSelector(state => state.settings.limitInputWord)
     const lastWasInc     = useSelector(state => state.game.incorrectLetters.lastWasInc)
     const typedWords     = useSelector(state => state.game.typedWords.current)
-    const [opponentPos, setOppPos]    = useState(0)
+    const opponentPos    = useSelector(state => state.game.opponentPos)
+    const opponentName   = useSelector(state => state.game.oppName)
     
     const resetTyped = () => setTypedWords([])
     //set key listener
@@ -108,18 +137,6 @@ function WordRow({ row }) {
             window.removeEventListener("keydown", handleKeyDown)
         }
     })
-
-    // set Opponent positions
-    useEffect(() => {
-        // axios.get('http://127.0.0.1:5000/game/9c41')
-        //     .then(res => {
-        //         for (const positions of res.data?.seq) {
-        //             setTimeout(() => {
-        //                 setOppPos(positions.p)
-        //             }, positions.t)
-        //         } 
-        //     })
-    }, [])
 
     function handleKeyDown(e) {
         let newWords = [...typedWords]
@@ -237,7 +254,8 @@ function WordRow({ row }) {
                                 isCorrect={shouldEval ? isCorrect : undefined}
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
-                                isOpponentPos={letCnt===opponentPos}
+                                isOpponentPos={letCnt === opponentPos}
+                                oppName={opponentName}
                             />
                         )
                         letCnt++
@@ -309,7 +327,7 @@ const WordWrapper = memo(({ children }) => {
     return <div className={styles.wordWrapper}>{children}</div>
 })
 
-const letterTemplate = ({ text, isCorrect, focus, isOpponentPos }, ref) => {
+const letterTemplate = ({ text, isCorrect, focus, isOpponentPos, oppName }, ref) => {
     return(
         <div
             className={`${styles.letter}
@@ -323,7 +341,7 @@ const letterTemplate = ({ text, isCorrect, focus, isOpponentPos }, ref) => {
             ref={ref}
         >
             <div className={isCorrect !== undefined ? styles.letterAnimation : ''}></div>
-            {isOpponentPos && <div className={styles.oppName}>daviddavid daviddavid</div>}
+            {isOpponentPos && <div className={styles.oppName}>{ oppName }</div>}
             {text}
             </div>
     )
