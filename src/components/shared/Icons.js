@@ -31,8 +31,8 @@ export const QuestionIcon = () => (
     <FontAwesomeIcon icon={faQuestionCircle} />
 )
 
-export const DownIcon = () => (
-    <FontAwesomeIcon icon={faCaretDown} />
+export const DownIcon = props => (
+    <FontAwesomeIcon icon={faCaretDown} {...props}/>
 )
 
 export const RestartIcon = () => (

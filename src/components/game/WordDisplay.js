@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import styles from "./WordDisplay.module.sass"
 import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc} from "../shared/helpers"
 import { setShow as setShowSettings } from "../../ducks/modules/settings"
+import { DownIcon } from '../shared/Icons'
 import {
     startGame,
     icrActiveRow,
@@ -11,7 +12,8 @@ import {
     setIncorrectLetters,
     setLastWasInc,
     setCurFocusPos,
-    setTypedWords
+    setTypedWords,
+    setOpponentPos
 } from "../../ducks/modules/game"
 
 export default function WordDisplay() {
@@ -94,6 +96,7 @@ function WordRow({ row }) {
     const limitInputWord = useSelector(state => state.settings.limitInputWord)
     const lastWasInc     = useSelector(state => state.game.incorrectLetters.lastWasInc)
     const typedWords     = useSelector(state => state.game.typedWords.current)
+    const opponentPos    = useSelector(state => state.game.opponentPos)
     const resetTyped = () => setTypedWords([])
     //set key listener
     useEffect(() => {
@@ -102,6 +105,17 @@ function WordRow({ row }) {
             window.removeEventListener("keydown", handleKeyDown)
         }
     })
+    useEffect(() => {
+        let i = 0
+        setTimeout(() => {
+            dispatch(setOpponentPos(i + 1))
+            i++
+        }, 500)
+        setTimeout(() => {
+            dispatch(setOpponentPos(i + 1))
+            i++
+        }, 1000)
+    }, [])
     function handleKeyDown(e) {
         let newWords = [...typedWords]
         const curTypedWi = Math.max(0, newWords.length - 1)
@@ -205,6 +219,7 @@ function WordRow({ row }) {
                                 isCorrect={shouldEval ? isCorrect : undefined}
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
+                                isOpponentPos={letCnt===opponentPos}
                             />
                         )
                         letCnt++
@@ -275,21 +290,21 @@ const WordWrapper = memo(({ children }) => {
     return <div className={styles.wordWrapper}>{children}</div>
 })
 
-const letterTemplate = ({ text, isCorrect, focus }, ref) => {
+const letterTemplate = ({ text, isCorrect, focus, isOpponentPos }, ref) => {
     return(
         <div
             className={`${styles.letter}
-            ${text === " " ? styles.space : ""}
-            ${
-                isCorrect === undefined ? ""
-                    : isCorrect ?
-                        styles.letterCorrect : styles.letterIncorrect
+                ${text === " " ? styles.space : ""}
+                ${isCorrect === undefined ? ""
+                        : isCorrect ? styles.letterCorrect : styles.letterIncorrect
                 }
-            ${focus ? styles.letterFocus : ""}
+                ${focus ? styles.letterFocus : ""}
+                ${isOpponentPos ? styles.opponentPosition : ""}
             `}
             ref={ref}
         >
             <div className={isCorrect !== undefined ? styles.letterAnimation : ''}></div>
+            {isOpponentPos && <div className={styles.oppName}>Dave</div>}
             {text}
             </div>
     )

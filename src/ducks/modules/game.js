@@ -15,6 +15,7 @@ export const SET_LAST_WAS_INC       = 'SET_LAST_WAS_INC'
 export const UPDATE_PARTIAL_SPEED   = 'UPDATED_PARTIAL_SPEED'
 export const RESET_INC_BUFFER       = "RESET_INC_BUFFER"
 export const UPDATE_ELAPSED         = 'UPDATED_ELAPSED'
+export const SET_OPPONENT_POS       = 'SET_OPPONENT_POS'
 export const RESET_GAME             = 'RESET_GAME'
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
     incorrectLetters: { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
     speed           : { whole: 0, partial: 0, top: 0 },
     timer           : { start: null, elapsed: 0 },
+    opponentPos     : 0
 }
 
 const reducer = produce((draft, action = {}) => {
@@ -117,6 +119,10 @@ const reducer = produce((draft, action = {}) => {
             }
 
             draft.incorrectLetters.lastBuffer = { ...action.obj }
+            return
+        
+        case SET_OPPONENT_POS:
+            draft.opponentPos = action.pos
             return
         
         case RESET_INC_BUFFER:
@@ -210,5 +216,11 @@ export const updateElapsed = elapsed => ({
 export const resetGame = () => ({
     type: RESET_GAME
 })
+
+export const setOpponentPos = pos => ({
+    type: SET_OPPONENT_POS,
+    pos: pos
+})
+
 
 export default reducer
