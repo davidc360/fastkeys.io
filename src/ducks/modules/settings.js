@@ -19,19 +19,23 @@ const locPunc            = localStorage.getItem('punc')
 export const SET_CAPS    = 'SET_CAPS'
 const locCaps            = localStorage.getItem('caps')
 
+export const SET_USERNAME    = 'SET_USERNAME'
+const locUsername            = localStorage.getItem('username')
+
 
 
 const initialState  = {
-  show             : false,
-  numRows          : locNumRows ? +locNumRows : 4,
-  ignoreInc        : JSON.parse(locIgnoreInc) ?? false,
-  limitInputWord   : JSON.parse(locLimitInputWord) ?? true,
-  showCurrentTyped : JSON.parse(locShowCurrentTyped) ?? false, 
-  withPunc         : JSON.parse(locPunc) ?? false,
-  withCaps         : JSON.parse(locCaps) ?? false,
-  timeMode         : locTimeMode ? +locTimeMode : 5,
-  timeModes        : [5, 10, 30, 60, 120, 0],
-  version          : 'v 0.0.4.0'
+    show             : false,
+    username         : locUsername,
+    numRows          : locNumRows ? +locNumRows : 4,
+    ignoreInc        : JSON.parse(locIgnoreInc) ?? false,
+    limitInputWord   : JSON.parse(locLimitInputWord) ?? false,
+    showCurrentTyped : JSON.parse(locShowCurrentTyped) ?? false, 
+    withPunc         : JSON.parse(locPunc) ?? false,
+    withCaps         : JSON.parse(locCaps) ?? false,
+    timeMode         : locTimeMode ? +locTimeMode : 5,
+    timeModes        : [5, 10, 30, 60, 120, 0],
+    version          : 'v 0.0.4.0'
 }
 
 export default produce((draft, action = {}) => {
@@ -74,7 +78,11 @@ export default produce((draft, action = {}) => {
             localStorage.setItem('punc', action.bool)
             draft.withPunc = action.bool
             return
-         
+            
+        case SET_USERNAME:
+            localStorage.setItem('username', action.name)
+            draft.username = action.name
+            return
     }
 }, initialState)
 
@@ -120,4 +128,9 @@ export const setPunc = bool => ({
 export const setCaps = bool => ({
     type: SET_CAPS,
     bool: bool
+})
+
+export const setUsername = name => ({
+    type: SET_USERNAME,
+    name: name
 })

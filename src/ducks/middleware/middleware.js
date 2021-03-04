@@ -36,6 +36,7 @@ export default (store) => (next) => (action) => {
                 dispatch(updateElapsed(elapsed))
                 return elapsed
             }
+            // const checkForGameEnd = (elapsed) => {if (elapsed != action.duration*1000) dispatch(endGame())}
             const checkForGameEnd = (elapsed) => {if (elapsed >= action.duration*1000) dispatch(endGame())}
             
             const updateStates = _pipe(

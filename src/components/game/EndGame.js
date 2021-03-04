@@ -3,24 +3,42 @@ import { useSelector, useDispatch } from "react-redux"
 import styles from "./EndGame.module.sass"
 import { QuestionIcon, RestartIcon } from '../shared/Icons'
 import { resetGame } from '../../ducks/modules/game'
+import { setUsername } from '../../ducks/modules/settings'
+import axios from "axios"
 
 export default function () {
+    const username = useSelector(state => state.settings.username)
+    const positionSequence = useSelector(state => state.game.positionSequence)
+
     const dispatch = useDispatch()
     useEffect(() => {
+        window.addEventListener('keydown', handleKeydown)
         function handleKeydown(e) {
             if (e.key === 'Enter')
                 restartGame()
             else if (e.key === ' ')
                 e.preventDefault()
         }
-        window.addEventListener('keydown', handleKeydown)
         return () => {
             window.removeEventListener('keydown', handleKeydown)
         }
     }, [])
+
     function restartGame() {
         dispatch(resetGame())
     }
+
+    function updateUsername(e) {
+        dispatch(setUsername(e.target.value))   
+    }
+
+    function createLink(e) {
+        axios.post('http://127.0.0.1:5000/game', {
+            username: username,
+            sequence: positionSequence
+        })
+    }
+
     return (
         <div className={styles.endGameCtn}>
             <div className={styles.title}>Stats</div>
@@ -34,6 +52,10 @@ export default function () {
             </div>
             <Stats />
             <Mode />
+            <div className={styles.createLinkCtn}>
+                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name" maxLength={40} value={username}/>
+                <div className={styles.createLink} onClick={createLink}>Create & Copy Link</div>
+            </div>
             <WrongKeys />
         </div>
     );
@@ -136,10 +158,10 @@ function WrongKeys() {
             }
              <div className={styles.wrongKeysCtn}>
                 <div className={styles.tableLabel}>
-                    {/* <ToolTip tooltext={'Keys you missed and what you\'re typing instead.'}>
-                        Overall Stats <QuestionIcon />
-                    </ToolTip> */}
-                    <div>Overall Stats</div>
+                    <ToolTip tooltext={'Keys you missed and what you\'re typing instead.'}>
+                        Keys you mistype <QuestionIcon />
+                    </ToolTip>
+                    {/* <div>Keys You Mistype</div> */}
                 </div>
                 <IncLetTable incLetters={overallStats} type={'typedKeys'} />
             </div>

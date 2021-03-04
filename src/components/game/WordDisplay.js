@@ -15,6 +15,7 @@ import {
     setTypedWords,
     addPosSeq
 } from "../../ducks/modules/game"
+import axios from "axios"
 
 export default function WordDisplay() {
     const numRows = useSelector(state => state.settings.numRows)
@@ -117,12 +118,16 @@ function WordRow({ row }) {
 
     // set Opponent positions
     useEffect(() => {
-        for (const positions of oppPos) {
-            setTimeout(() => {
-                setOppPos(positions.pos)
-            }, positions.time)
-        } 
+        axios.get('http://127.0.0.1:5000/game/9c40')
+            .then(res => {
+                for (const positions of res.data.sequence) {
+                    setTimeout(() => {
+                        setOppPos(positions.pos)
+                    }, positions.time)
+                } 
+            })
     }, [])
+
     function handleKeyDown(e) {
         let newWords = [...typedWords]
         const curTypedWi = Math.max(0, newWords.length - 1)
@@ -323,7 +328,7 @@ const letterTemplate = ({ text, isCorrect, focus, isOpponentPos }, ref) => {
             ref={ref}
         >
             <div className={isCorrect !== undefined ? styles.letterAnimation : ''}></div>
-            {isOpponentPos && <div className={styles.oppName}>Dave</div>}
+            {isOpponentPos && <div className={styles.oppName}>daviddavid daviddavid</div>}
             {text}
             </div>
     )
