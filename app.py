@@ -1,4 +1,4 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 
 from flask_pymongo import PyMongo
@@ -34,14 +34,18 @@ def post_game():
     if request.method == 'POST':
         doc = {}
         params = request.get_json()
-        doc['usr'] = params.get('username')
+        
+        name = params.get('username')
+        if name is not None:
+            doc['usr'] = name
         doc['se'] = params.get('sequence')
         doc['ws'] = params.get('words')
         doc['st'] = params.get('stats')
         doc['m'] = params.get('mode')
-        doc['id'] = format(gamesdb.estimated_document_count()+40000, 'x')
+        game_id = format(gamesdb.estimated_document_count()+40000, 'x')
+        doc['id'] = game_id
         gamesdb.insert_one(doc)
-        return Response(status=200)
+        return jsonify(game_id)
 
 @app.route('/game/<game_id>', methods=['GET', 'DELETE'])
 def return_game(game_id=None):
