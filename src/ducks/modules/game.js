@@ -159,7 +159,6 @@ const reducer = produce((draft, action = {}) => {
 
         case SET_OPPONENT_POS:
             draft.opponentPos = { pos: action.pos, row: action.row }
-            console.log(draft.opponentPos)
             return
         
         case RESET_INC_BUFFER:

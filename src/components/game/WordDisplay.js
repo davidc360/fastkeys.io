@@ -114,7 +114,7 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
             resetTyped()
             if (!shouldLoadOpponent) {
                 setNewWords()
-            } else if (opponentDataLoaded) {
+            } else if (opponentDataLoaded && oppData !== undefined) {
                 const oppWords = oppData.words
                 let oppWordRow = oppWords[rowNums[row]]
                 if (oppWordRow !== undefined) {
@@ -131,6 +131,8 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
                 } else {
                     setNewWords() 
                 }
+            } else {
+                setNewWords()
             }
         }
     }, [gameInProgress, opponentDataLoaded])
@@ -185,13 +187,12 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
     })
 
     function handleKeyDown(e) {
+        if(!active) return
         let newWords = [...typedWords]
         const curTypedWi = Math.max(0, newWords.length - 1)
         const curTypedWord = newWords[curTypedWi] ?? ''
 
         const curWordLength = words[curTypedWi].length
-
-        let positionChange = 0
 
         // key.length === 1 means it's a single letter pressed, including space
         if (e.key.length === 1) {
@@ -304,7 +305,7 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
                                 isOpponentPos={letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
-                                oppName={oppData.name}
+                                oppName={oppData?.name}
                             />
                         )
                         letCnt++
@@ -355,12 +356,23 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
 
     //check for new line
     useEffect(() => {
+        let isNewLine = false
         if (!active) return
         let nextWord = nextWordEl.current?.parentNode
         let curWord = nextWordEl.current?.parentNode?.previousSibling
-        if (!curWord) return
+        console.log(typedWords)
+        
+        // if not the first element, check if cur word and next word are on same Y axis
+        if (typedWords.length > 1 && (nextWord?.getBoundingClientRect().top !== curWord?.getBoundingClientRect().top))
+            isNewLine = true
+
+        // if not the last opponent word row, check if typed more words than opponent's row
+        // reason has to be not last row is because opponent might not have typed the
+        // entire row
+        if (rowNums[row] < oppData?.words.length-1 && typedWords.length > oppData?.words[rowNums[row]]?.length)
+            isNewLine = true
         //if new line
-        if ( nextWord.getBoundingClientRect().top !== curWord.getBoundingClientRect().top) {
+        if (isNewLine) {
             window.removeEventListener("keydown", handleKeyDown)
             dispatch(icrActiveRow(numRows))
             setNewWords()

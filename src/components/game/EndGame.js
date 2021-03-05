@@ -56,7 +56,7 @@ export default function () {
             mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
             stats: { speed: Math.round(speed), accuracy: Math.round(accuracy) }
-        })
+        }).then(resp => console.log(resp))
     }
 
     function Mode() {
