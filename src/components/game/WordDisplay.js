@@ -30,7 +30,6 @@ export default function WordDisplay({ gameId }) {
     const [loadingData, setLoadingData] = useState(gameId !== undefined)
     const oppData    = useSelector(state => state.game.opponentData)
 
-    const opponentSequence = useRef([])
     // set Opponent positions
     useEffect(() => {
         if (gameId !== undefined) {
@@ -46,9 +45,9 @@ export default function WordDisplay({ gameId }) {
                     newOppData.stats = res.data.st
                     newOppData.mode = res.data.m
                     dispatch(setOpponentData(newOppData))
+                    dispatch(setOpponentPos(0, 0))
                     // dispatch(setOppName(res.data.usr))
                     // dispatch(setOppWords(wordCodesToWords(res.data.ws)))
-                    opponentSequence.current = res.data.se
                     setLoadingData(false)
                 } else {
                     setLoadingData(false)
@@ -58,7 +57,8 @@ export default function WordDisplay({ gameId }) {
     }, [])
 
     function startGameCallback() {
-        opponentSequence.current.forEach(sequence => {
+        if (oppData !== undefined)
+        oppData.sequence.forEach(sequence => {
             setTimeout(() => {
                 dispatch(setOpponentPos(sequence.p, sequence.r))
             }, sequence.t)
@@ -174,7 +174,6 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
     const lastWasInc     = useSelector(state => state.game.incorrectLetters.lastWasInc)
     const typedWords     = useSelector(state => state.game.typedWords.current)
     const opponentPos    = useSelector(state => state.game.opponentPos)
-    const opponentName   = useSelector(state => state.game.oppName)
     
     const resetTyped = () => setTypedWords([])
     //set key listener
@@ -305,7 +304,7 @@ function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoade
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
                                 isOpponentPos={letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
-                                oppName={opponentName}
+                                oppName={oppData.name}
                             />
                         )
                         letCnt++

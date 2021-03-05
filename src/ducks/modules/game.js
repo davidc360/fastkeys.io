@@ -21,8 +21,8 @@ export const SET_CORRECT_NUMS       = 'SET_CORRECT_NUMS'
 export const RESET_LAST_CORNUMS     = 'RESET_LAST_CORNUMS'
 export const ADD_NONFORG_INC_LETTER = 'ADD_NONFORG_INC_LETTER'
 
-export const SET_OPPONENT_POS            = 'SET_OPPONENT_POS'
 export const ADD_POS_SEQ                 = 'ADD_POS_SEQ'
+export const SET_OPPONENT_POS            = 'SET_OPPONENT_POS'
 export const SET_TYPED_WORDS             = 'SET_TYPED_WORDS'
 export const ADD_TYPED_TO_TOTAL          = 'ADD_TYPED_TO_TOTAL'
 export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
@@ -148,10 +148,6 @@ const reducer = produce((draft, action = {}) => {
             draft.incorrectLetters.lastBuffer = { ...action.obj }
             return
         
-        case SET_OPPONENT_POS:
-            draft.opponentPos = { pos: action.pos, row: action.row }
-            return
-        
         case ADD_POS_SEQ:
             if (draft.gameInProgress)
             draft.positionSequence.push({
@@ -159,6 +155,12 @@ const reducer = produce((draft, action = {}) => {
                 p: action.pos,
                 t: draft.timer.elapsed
             })
+            return
+
+        case SET_OPPONENT_POS:
+            draft.opponentPos = { pos: action.pos, row: action.row }
+            console.log(draft.opponentPos)
+            return
         
         case RESET_INC_BUFFER:
             draft.incorrectLetters.lastBuffer = {}
@@ -274,28 +276,10 @@ export const setTypedFullWords = words => ({
     words: words
 })
 
-export const setOppName = name => ({
-    type: SET_DATA,
-    key: 'oppName',
-    value: name
-})
-
-export const setOppWords = words => ({
-    type: SET_DATA,
-    key: 'opponentWords',
-    value: words
-})
-
 export const setRowNums = nums => ({
     type: SET_DATA,
     key: 'rowNums',
     value: nums
-})
-
-export const setOpponentSequence = seq => ({
-    type: SET_DATA,
-    key: 'opponentSequence',
-    value: seq
 })
 
 export const setOpponentData= data => ({
