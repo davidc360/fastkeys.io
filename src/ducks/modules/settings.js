@@ -3,7 +3,8 @@ import produce from 'immer'
 export const SET_TIME_MODE               = 'settings/SET_TIME_MODE'
 const locTimeMode                        = localStorage.getItem('timeMode')
 export const SET_NUM_ROWS                = 'settings/SET_NUM_ROWS'
-const locNumRows                         = localStorage.getItem('numRows')
+export const locNumRows                  = localStorage.getItem('numRows')
+export const defaultNumRows              = locNumRows ? +locNumRows : 4
 const SET_SHOW                           = 'settings/SET_SHOW'
 const TOGGLE_SHOW                        = 'TOGGLE_SHOW' 
 const SHOW_CURRENT_TYPED                 = 'SHOW_CURRENT_TYPED'
@@ -22,12 +23,10 @@ const locCaps            = localStorage.getItem('caps')
 export const SET_USERNAME    = 'SET_USERNAME'
 const locUsername            = localStorage.getItem('username')
 
-
-
 const initialState  = {
     show             : false,
     username         : locUsername,
-    numRows          : locNumRows ? +locNumRows : 4,
+    numRows          : defaultNumRows,
     ignoreInc        : JSON.parse(locIgnoreInc) ?? false,
     limitInputWord   : JSON.parse(locLimitInputWord) ?? false,
     showCurrentTyped : JSON.parse(locShowCurrentTyped) ?? false, 

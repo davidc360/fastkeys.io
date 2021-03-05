@@ -1,4 +1,5 @@
 import produce from 'immer'
+import { defaultNumRows } from './settings'
 
 export const START_GAME             = 'STARTED_GAME'
 export const END_GAME               = 'ENDED_GAME'
@@ -26,6 +27,7 @@ export const SET_TYPED_WORDS             = 'SET_TYPED_WORDS'
 export const ADD_TYPED_TO_TOTAL          = 'ADD_TYPED_TO_TOTAL'
 export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
 
+
 const initialState = {
     // words           : [],
     activeRow       : 0,
@@ -39,7 +41,9 @@ const initialState = {
     speed           : { whole: 0, partial: 0, top: 0 },
     timer           : { start: null, elapsed: 0 },
     positionSequence: [],
-    opponentWords   : []
+    opponentSequence: [],
+    opponentWords   : [],
+    rowNums         : [...Array(defaultNumRows).keys()]
 }
 
 const reducer = produce((draft, action = {}) => {
@@ -149,6 +153,7 @@ const reducer = produce((draft, action = {}) => {
             return
         
         case ADD_POS_SEQ:
+            if (draft.gameInProgress)
             draft.positionSequence.push({
                 r: action.row,
                 p: action.pos,
@@ -279,6 +284,24 @@ export const setOppWords = words => ({
     type: SET_DATA,
     key: 'opponentWords',
     value: words
+})
+
+export const setRowNums = nums => ({
+    type: SET_DATA,
+    key: 'rowNums',
+    value: nums
+})
+
+export const setOpponentSequence = seq => ({
+    type: SET_DATA,
+    key: 'opponentSequence',
+    value: seq
+})
+
+export const setOpponentData= data => ({
+    type: SET_DATA,
+    key: 'opponentData',
+    value: data
 })
 
 

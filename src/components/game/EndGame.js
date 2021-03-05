@@ -17,6 +17,7 @@ export default function () {
 
     const withCaps = useSelector(state => state.settings.withCaps)
     const withPunc = useSelector(state => state.settings.withPunc)
+    const timeMode = useSelector(state => state.settings.timeMode)
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -45,16 +46,16 @@ export default function () {
         console.log({
             username: username,
             sequence: positionSequence,
-            mode: { withPunc, withCaps },
+            mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
             stats: { speed, accuracy }
         })
         axios.post('http://127.0.0.1:5000/game', {
             username: username,
             sequence: positionSequence,
-            mode: { withPunc, withCaps },
+            mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
-            stats: { speed, accuracy }
+            stats: { speed: Math.round(speed), accuracy: Math.round(accuracy) }
         })
     }
 

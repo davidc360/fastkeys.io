@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, memo, forwardRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import styles from "./WordDisplay.module.sass"
-import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc} from "../shared/helpers"
+import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc, wordCodesToWords} from "../shared/helpers"
 import { setShow as setShowSettings } from "../../ducks/modules/settings"
 import { DownIcon } from '../shared/Icons'
 import {
@@ -16,7 +16,8 @@ import {
     setTypedWords,
     setTypedFullWords,
     setOpponentPos,
-    setOppName
+    setRowNums,
+    setOpponentData
 } from "../../ducks/modules/game"
 import axios from "axios"
 
@@ -24,35 +25,57 @@ export default function WordDisplay({ gameId }) {
     const dispatch  = useDispatch()
     const numRows   = useSelector(state => state.settings.numRows)
     const rowNum    = useSelector(state => state.game.rowNum)
-    const oppWords  = useSelector(state => state.game.opponentWords)
     const WordRows  = []
+    
+    const [loadingData, setLoadingData] = useState(gameId !== undefined)
+    const oppData    = useSelector(state => state.game.opponentData)
 
+    const opponentSequence = useRef([])
     // set Opponent positions
     useEffect(() => {
         if (gameId !== undefined) {
             axios.get('http://127.0.0.1:5000/game/' + gameId)
             .then(res => {
                 console.log(res)
-                dispatch(setOppName(res.data.usr))
                 // if game is found in db
                 if (res.data !== null) {
-                    for (const positions of res.data.se) {
-                        setTimeout(() => {
-                            dispatch(setOpponentPos(positions.p, positions.r))
-                        }, positions.t)
-                    } 
+                    const newOppData = {}
+                    newOppData.words = wordCodesToWords(res.data.ws)
+                    newOppData.name = res.data.usr
+                    newOppData.sequence = res.data.se
+                    newOppData.stats = res.data.st
+                    newOppData.mode = res.data.m
+                    dispatch(setOpponentData(newOppData))
+                    // dispatch(setOppName(res.data.usr))
+                    // dispatch(setOppWords(wordCodesToWords(res.data.ws)))
+                    opponentSequence.current = res.data.se
+                    setLoadingData(false)
+                } else {
+                    setLoadingData(false)
                 }
             })
         }
     }, [])
 
+    function startGameCallback() {
+        opponentSequence.current.forEach(sequence => {
+            setTimeout(() => {
+                dispatch(setOpponentPos(sequence.p, sequence.r))
+            }, sequence.t)
+        })
+    }
+
     useEffect(() => {
         console.log(gameId)
     }, [])
 
+
     for (let i = 0;  i < numRows; i++) {
         WordRows.push(
-            <WordRow key={i} row={i} words={oppWords[rowNum]}/> 
+            <WordRow key={i} row={i}
+                shouldLoadOpponent={gameId !== undefined}
+                opponentDataLoaded={!loadingData && gameId !== undefined && oppData!==undefined}
+                startGameCallback={startGameCallback} /> 
         )
     }
     return (
@@ -62,13 +85,14 @@ export default function WordDisplay({ gameId }) {
     )
 }
 
-function WordRow({ row }) {
+function WordRow({ row, startGameCallback, shouldLoadOpponent, opponentDataLoaded }) {
     const dispatch       = useDispatch()
     const activeRow      = useSelector(state => state.game.activeRow)
     const active         = (row === activeRow)
     const gameInProgress = useSelector(state => state.game.gameInProgress)
     const rowNum         = useSelector(state => state.game.rowNum)
-    
+    const rowNums   = useSelector(state => state.game.rowNums)
+
     const withCaps       = useSelector(state => state.settings.withCaps)
     const withPunc       = useSelector(state => state.settings.withPunc)
 
@@ -79,17 +103,37 @@ function WordRow({ row }) {
         withPunc: withPunc
     }
 
+    const [words, setWords] = useState([])
+    const oppData   = useSelector(state => state.game.opponentData)
     function setNewWords() {
         setWords(getRandomWords(INIT_WORDS_CONF))
     }
-    const [words, setWords] = useState([])
     //set words for new game
     useEffect(() => {
         if (!gameInProgress) {
             resetTyped()
-            setNewWords()
+            if (!shouldLoadOpponent) {
+                setNewWords()
+            } else if (opponentDataLoaded) {
+                const oppWords = oppData.words
+                let oppWordRow = oppWords[rowNums[row]]
+                if (oppWordRow !== undefined) {
+                    // if last row from opponent, add more words to fill in the whole row
+                    if (rowNums[row] === oppWords.length - 1) {
+                        oppWordRow = oppWordRow.concat(getRandomWords({
+                            num: 30,
+                            withSpace: true,
+                            withCaps: oppData.mode.withCaps,
+                            withPunc: oppData.mode.withPunc
+                        }))
+                    }
+                    setWords(oppWordRow)
+                } else {
+                    setNewWords() 
+                }
+            }
         }
-    }, [gameInProgress])
+    }, [gameInProgress, opponentDataLoaded])
 
     //format words if word format changes
     useEffect(() => {
@@ -179,6 +223,7 @@ function WordRow({ row }) {
             if (!gameInProgress) {
                 dispatch(setShowSettings(false))
                 dispatch(startGame(Date.now(), timeMode))
+                startGameCallback()
             }
         
             // 8 === back space
@@ -204,9 +249,8 @@ function WordRow({ row }) {
     const nextWordPos = useRef({ word: 0, letter: 0, pos: 0})
     const curCorNums = useRef({ whole: 0, partial: 0 })
 
-    // add to pos sequence every time the current letter position changes
+    // update what words we currently passed
     useEffect(() => {
-        // dispatch(addPosSeq(nextWordPos.current.pos, rowNum))
         dispatch(setTypedFullWords(words.slice(0, typedWords.length)))
     }, [nextWordPos.current.pos])
 
@@ -219,6 +263,7 @@ function WordRow({ row }) {
     const numRows = useSelector(state => state.settings.numRows)
     const nextWordEl = useRef()
 
+
     /*---------------
     Compute letters
     ---------------*/
@@ -228,7 +273,8 @@ function WordRow({ row }) {
     const corNums = { whole: 0, partial: 0 }
     const incLets = {}
     const curIncLets = useRef({})
-    if (active) {
+    // if (active) {
+    if (true) {
         wordEls = words.map((word, wi) => {
             let wordHasIncLet = false
             let wordHasFocus = false
@@ -244,13 +290,13 @@ function WordRow({ row }) {
                         if (li > 0) {
                             const letterIsLast = li === word.length - 1
                             if (wi === curTypedWi)
-                                isNextFocus = ( li === curTypedWord?.length) || (letterIsLast && curTypedWord?.length > li)
+                                isNextFocus = active && ( li === curTypedWord?.length) || (letterIsLast && curTypedWord?.length > li)
                         } else {
-                            isNextFocus = (wi === curTypedWi && curTypedWord.length === 0)
+                            isNextFocus = active && (wi === curTypedWi && curTypedWord.length === 0)
                         }
                         const isCorrect = (letter === typedWords[wi]?.charAt(li))
                         const isTyped = typedWords[wi]?.charAt(li) ? true : false
-                        const shouldEval =  (isTyped || curTypedWi > wi) ? true : false
+                        const shouldEval =  active && (isTyped || curTypedWi > wi) ? true : false
                         let letterEl = (
                             <Letter
                                 text={letter}
@@ -258,14 +304,13 @@ function WordRow({ row }) {
                                 isCorrect={shouldEval ? isCorrect : undefined}
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
-                                isOpponentPos={letCnt === opponentPos}
+                                isOpponentPos={letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
                                 oppName={opponentName}
                             />
                         )
                         letCnt++
-                        if (isNextFocus) {
+                        if (isNextFocus && active) {
                             nextWordPos.current = { word: wi, letter: li, pos: letCnt-1 }
-                            // setNextLetPos(letCnt)
                             wordHasFocus = true
                         }
                         if (isCorrect) {
@@ -320,6 +365,11 @@ function WordRow({ row }) {
             window.removeEventListener("keydown", handleKeyDown)
             dispatch(icrActiveRow(numRows))
             setNewWords()
+
+            // increment the row number the current row is on
+            const newRowNums = [...rowNums]
+            newRowNums[row] = Math.max(...newRowNums) + 1
+            dispatch(setRowNums(newRowNums))
         }
     }, [typedWords])
 

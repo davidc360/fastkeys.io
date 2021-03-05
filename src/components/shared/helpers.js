@@ -123,7 +123,7 @@ export function wordsetToCodes(wordRows) {
 }
 
 function wordToCode(word) {
-    const result = []
+    let result = ''
     // if last character is space, slice it
     if (word.slice(-1) === ' ') word = word.slice(0, -1)
 
@@ -140,10 +140,38 @@ function wordToCode(word) {
     }
     
     // push index of the word
-    result.push(WORDSET_INDEXES[word])
-    if (!lastIsLet) result.push(lastCharacter)
-    if (firstIsCap) result.push('c')
+    result += WORDSET_INDEXES[word] 
+    if (!lastIsLet) result += ' ' + lastCharacter
+    if (firstIsCap) result += ' ' + 'c'
     return result
+}
+
+function codeToWord(code) {
+    const codes = code.split(' ')
+    let word = WORDSET[codes[0]]
+
+    if (codes[1] !== undefined) {
+        if (codes[1] === 'c') {
+            word = word[0].toUpperCase() + word.slice(1)
+        } else {
+            word += codes[1]
+        }
+    }
+    
+    if (codes[2] === 'c') {
+        word = word[0].toUpperCase() + word.slice(1)
+    }
+
+    // add space to the end
+    word += ' '
+
+    return word 
+}
+
+export function wordCodesToWords(codes) {
+    return codes.map(row => (
+        row.map(code => codeToWord(code))
+    ))
 }
 
 export const windowIsScrollable = () => (window.innerHeight + window.scrollY) <= document.body.offsetHeight
