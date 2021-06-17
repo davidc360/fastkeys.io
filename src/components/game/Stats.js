@@ -43,7 +43,7 @@ function Timer() {
                             00: <InfIcon />
                             <div className={styles.showStats}
                                 onClick={ ()=>dispatch(endGame()) } >
-                                END
+                                stop
                             </div>
                         </>)
                 : elapsed > 0 ? secToMMSS(timeLeft) : secToMMSS(timeMode)}

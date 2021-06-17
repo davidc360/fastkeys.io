@@ -19,6 +19,10 @@ export default function () {
     const withPunc = useSelector(state => state.settings.withPunc)
     const timeMode = useSelector(state => state.settings.timeMode)
 
+    const [createLinkButtonText, setCreateLinkButtonText] = useState('Create Battle Link')
+    const [buttonCallback, setButtonCallback] = useState(createLinkButtonText)
+    const [gameId, setGameId] = useState()
+
     const dispatch = useDispatch()
     useEffect(() => {
         window.addEventListener('keydown', handleKeydown)
@@ -41,7 +45,12 @@ export default function () {
         dispatch(setUsername(e.target.value))   
     }
 
-    function createLink(e) {
+    function copyLinkFunc(e) {
+        console.log('copy link')
+    }
+
+    function createLinkFunc(e) {
+        e.onClick = null
         const wordsTypedCodes = wordsetToCodes(typedFullWords)
         console.log({
             username: username,
@@ -50,13 +59,27 @@ export default function () {
             words: wordsTypedCodes,
             stats: { speed, accuracy }
         })
+
+        // change button text to loading dots
+        let length = 0
+        setCreateLinkButtonText('.'.repeat(length+1))
+        const loadingDotsInterval = setInterval(() => {
+            length = (length+1)%4
+            // setCreateLinkButtonText('.'.repeat((length+1)%3+1))
+            setCreateLinkButtonText('.'.repeat(length+1))
+        }, 150)
+
         axios.post('http://127.0.0.1:5000/game', {
             username: username,
             sequence: positionSequence,
             mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
             stats: { speed: Math.round(speed), accuracy: Math.round(accuracy) }
-        }).then(resp => console.log(resp))
+        }).then(resp => {
+            clearInterval(loadingDotsInterval)
+            setCreateLinkButtonText('Copy')
+            setGameId(resp.data)
+        })
     }
 
     function Mode() {
@@ -92,10 +115,13 @@ export default function () {
 
     function CreateLink() {
         return (
+            <>
             <div className={styles.createLinkCtn}>
                 <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} value={username}/>
-                <div className={styles.createLink} onClick={createLink}>Create & Copy Link</div>
+                <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : copyLinkFunc }>{createLinkButtonText}</div>
             </div>
+            {gameId && <input className={styles.gameLink} value={'http://types.ink/game/' + gameId} />}
+            </>
         )
     }
 

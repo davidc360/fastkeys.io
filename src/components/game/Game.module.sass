@@ -1,5 +1,5 @@
 @import '../shared/shared.sass'
-
+@import '../shared/animations.sass'
 
 .gameContainer
   display: flex
@@ -14,3 +14,75 @@
 button
   border: none
   padding: 0
+
+.wordsAreaContainer 
+    width: 100%
+    margin-bottom: 0.7 * $FONT-SIZE
+    margin-top: $FONT-SIZE * 1.5 
+
+.wordsRow 
+    font-size: 1 * $FONT-SIZE
+    height: 2.5 * $FONT-SIZE
+    padding: 0.5 * $FONT-SIZE
+    // padding-top: 0.5 * $FONT-SIZE
+    // padding-bottom: 0.25 * $FONT-SIZE
+    overflow: hidden
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    animation: slideUp 0.5s ease-out 
+
+.wordWrapper
+    height: 2 * $FONT-SIZE
+    position: relative
+    display: flex
+    flex-direction: row
+    align-items: flex-end
+
+.opponentPosition
+    background-color: lightgray
+
+.letter
+    height: 100%
+    line-height: 2 * $FONT-SIZE
+
+.letterFocus
+    background-color: var(--letter-focus)
+    border-bottom: 2px solid var(--text-color)
+
+.letterCorrect 
+    background-color: var(--letter-correct)
+    position: relative
+
+.letterIncorrect 
+    background-color: var(--letter-incorrect)
+    position: relative
+
+.oppName
+    position: absolute
+    margin-top: -2rem
+    font-size: 0.5em
+    white-space: nowrap
+
+.space::after
+    content: '.'
+    visibility: hidden
+    
+.letterAnimation
+    visibility: hidden
+    position: absolute
+    transform-origin: bottom
+    background-color: gray
+    width: 100%
+    height: 100%
+    margin-top: 0
+    animation: growUp 0.3s forwards
+
+.currentTypedWordCtn
+    position: absolute
+    left: 0
+    top: -0.65 * $FONT-SIZE
+    white-space: nowrap
+    // line-height: 2 * $FONT-SIZE
+    // color: var(--text-secondary)
+    // background-color: var(--background-color)

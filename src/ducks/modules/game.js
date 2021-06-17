@@ -28,22 +28,27 @@ export const ADD_TYPED_TO_TOTAL          = 'ADD_TYPED_TO_TOTAL'
 export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
 
 
+// the game renders numRows number of rows of words on the screen
+// the focus will go from line to line
+// when on the last line going to the next line, will start on top and rows will rerender with new words
+// activeRow is the current active row on the screen
+// activeRowId is id of the current active row, or the count how many rows have been rendered so far
 const initialState = {
-    // words           : [],
-    activeRow       : 0,
-    rowNum          : 0,
-    gameInProgress  : false,
-    typedWords      : { current: [], total: [], full: [], fullTotal: []},
-    currentFocus    : { pos: {} },
-    accuracy        : 0,
-    correctNums     : { current: { whole: 0, partial: 0 }, last: { whole: 0, partial: 0 } },
-    incorrectLetters: { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
-    speed           : { whole: 0, partial: 0, top: 0 },
-    timer           : { start: null, elapsed: 0 },
-    positionSequence: [],
-    opponentSequence: [],
-    opponentWords   : [],
-    rowNums         : [...Array(defaultNumRows).keys()]
+    // words             : [],
+    activeRow            : 0,
+    activeRowId          : 0,
+    gameInProgress       : false,
+    typedWords           : { current: [], total: [], full: [], fullTotal: []},
+    currentFocus         : { pos: {} },
+    accuracy             : 0,
+    correctNums          : { current: { whole: 0, partial: 0 }, last: { whole: 0, partial: 0 } },
+    incorrectLetters     : { lastWasInc: false, nonForget: {}, forgetting: {}, lastBuffer: {} },
+    speed                : { whole: 0, partial: 0, top: 0 },
+    timer                : { start: null, elapsed: 0 },
+    positionSequence     : [],
+    opponentSequence     : [],
+    opponentWords        : [],
+    rowNums              : [...Array(defaultNumRows).keys()]
 }
 
 const reducer = produce((draft, action = {}) => {
@@ -71,7 +76,7 @@ const reducer = produce((draft, action = {}) => {
 
         case ICR_ACTIVE_ROW:
             draft.activeRow = (draft.activeRow + 1) % action.numRows
-            draft.rowNum++
+            draft.activeRowId++
             return
 
         case SET_TYPED_WORDS:
