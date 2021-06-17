@@ -10,6 +10,8 @@ import json
 import os
 from dotenv import load_dotenv, find_dotenv
 
+import uuid
+
 load_dotenv(find_dotenv())
 
 MONGO_URI = os.environ.get("MONGO_URI")
@@ -42,9 +44,11 @@ def post_game():
         doc['ws'] = params.get('words')
         doc['st'] = params.get('stats')
         doc['m'] = params.get('mode')
-        game_id = format(gamesdb.estimated_document_count()+40000, 'x')
+        game_id = str(uuid.uuid4())[:8]
+        while gamesdb.find_one({"id": game_id}) is not None:
+            game_id = str(uuid.uuid4())[:8]
         doc['id'] = game_id
-        gamesdb.insert_one(doc)
+        # gamesdb.insert_one(doc)
         return jsonify(game_id)
 
 @app.route('/game/<game_id>', methods=['GET', 'DELETE'])
@@ -52,7 +56,6 @@ def return_game(game_id=None):
     if request.method == 'GET':
         game = gamesdb.find_one({"id": game_id})
         return json.dumps(game, default=str)
-
 
 if __name__ == '__main__':
     app.run()
