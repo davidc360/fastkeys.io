@@ -18,12 +18,11 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
 
 .title
     font-size: 2.1 * $ENDGAMEFONT
-    margin-left: 7 * $ENDGAMEFONT
+    margin-bottom: 1em
 
 .statCtn
     display: flex
     justify-content: space-evenly
-    padding-left: 7 * $ENDGAMEFONT
     height: $BIGGER-STAT
     width: 100%
     
@@ -94,8 +93,7 @@ table
     box-shadow: 4px 5px 5px var(--shadow-color)
 
 .restartCtn
-    display: inline-block
-    float: right
+    padding-top: 0.4em
     &:hover
         color: var(--text-disabled)
         cursor: pointer
@@ -135,11 +133,8 @@ table
     margin-top: $FONT-SIZE
 
 .createLinkCtn
-    margin-top: 2em
-    margin-left: auto
     display: flex
-    justify-content: flex-end
-    // flex-direction: column
+    flex-direction: column
 
 .createLink
     border: solid 1px black
@@ -155,16 +150,28 @@ table
         border-color: var(--text-disabled)
 
 .yourName
+    width: 80%
     font-size: 1rem
+    vertical-align: center
+    height: 2em
     border: None
     display: inline-block
     border-bottom: solid 1px black
-    margin-right: 0.5em
     text-align: center
-    padding-top: 1.2em
+    // padding-top: 1.2em
+    margin: 0 auto
+    margin-top: 5px
+    text-shadow: None
 
     &:hover
         border-color: var(--text-disabled)
+
+.actionButtons
+    display: flex
+    justify-content: center
+    gap: 2em
+    align-items: flex-start
+    margin-top: 1.5em
         
 .gameLink
     animation: slideDown 5s ease

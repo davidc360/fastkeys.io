@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux"
 import styles from "./EndGame.module.sass"
 import { QuestionIcon, RestartIcon } from '../shared/Icons'
@@ -42,7 +42,7 @@ export default function () {
     }
 
     function updateUsername(e) {
-        dispatch(setUsername(e.target.value))   
+        dispatch(setUsername(e.target.value)) 
     }
 
     function copyLinkFunc(e) {
@@ -53,7 +53,7 @@ export default function () {
         e.onClick = null
         const wordsTypedCodes = wordsetToCodes(typedFullWords)
         console.log({
-            username: username,
+            // username: username,
             sequence: positionSequence,
             mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
@@ -113,32 +113,26 @@ export default function () {
         )
     }
 
-    function CreateLink() {
-        return (
-            <>
-            <div className={styles.createLinkCtn}>
-                <input className={styles.yourName} type="text" onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} value={username}/>
-                <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : copyLinkFunc }>{createLinkButtonText}</div>
-            </div>
-            {gameId && <input className={styles.gameLink} value={'http://types.ink/game/' + gameId} />}
-            </>
-        )
-    }
-
     return (
         <div className={styles.endGameCtn}>
             <div className={styles.title}>Stats</div>
-            <div className={styles.restartCtn} onClick={restartGame}>
-                <div className={styles.restart}>
-                    <div>
-                        Restart <RestartIcon />
+            <Stats />
+            <div className={styles.actionButtons}>
+                <div className={styles.createLinkCtn}>
+                    <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : copyLinkFunc }>{createLinkButtonText}</div>
+                    {gameId && <input className={styles.gameLink} value={'http://types.ink/game/' + gameId} />}
+                    <input className={styles.yourName} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} />
+                </div>
+                <div className={styles.restartCtn} onClick={restartGame}>
+                    <div className={styles.restart}>
+                        <div>
+                            Restart <RestartIcon />
+                        </div>
+                        <div className={styles.pressEnter}>(press enter ↵)</div>
                     </div>
-                    <div className={styles.pressEnter}>(press enter ↵)</div>
                 </div>
             </div>
-            <Stats />
             <Mode />
-            <CreateLink />
             <WrongKeys />
         </div>
     );
