@@ -116,12 +116,10 @@ export default function () {
                     <input className={styles.yourName} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} />
                 </div>
                 <div className={styles.restartCtn} onClick={restartGame}>
-                    <div className={styles.restart}>
-                        <div>
-                            Restart <RestartIcon />
-                        </div>
-                        <div className={styles.pressEnter}>(press enter ↵)</div>
+                    <div>
+                        Restart <RestartIcon />
                     </div>
+                    <div className={styles.pressEnter}>(press enter ↵)</div>
                 </div>
             </div>
             <WrongKeys />

@@ -125,6 +125,12 @@ table
 .restartCtn
     font-size: 1.8rem
     padding-top: 0.4em
+
+    > div
+        display: flex
+        gap: 0.4em
+        margin-bottom: 0.1em
+
     &:hover
         color: var(--text-disabled)
         cursor: pointer
@@ -214,12 +220,7 @@ table
     >:nth-child(2)
         grid-row: 1
         grid-column: 3
-        justify-self: start        
-
-    //flex
-    // display: flex
-    // justify-content: center
-    // gap: 2em
+        justify-self: start
         
 .gameLink
     animation: slideDown 5s ease
