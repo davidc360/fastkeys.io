@@ -25,7 +25,7 @@ function Settings() {
 
     return (
         <div className={styles.settingsContainer}>
-            <GearIcon onClick={toggleShow} className={styles.gearIcon} />
+            {/* <GearIcon onClick={toggleShow} className={styles.gearIcon} /> */}
             <SettingsPane show={show} />
         </div>
     )
@@ -56,7 +56,7 @@ function SettingsPane({ show }) {
             <div>
                 <WordRowSettings />
                 <TimeSettings className={styles.timeSettings}></TimeSettings>
-                <div className={styles.version}>{version}</div>      
+                {/* <div className={styles.version}>{version}</div>       */}
             </div>
         </div>
     )
@@ -92,7 +92,7 @@ function TypingModeSetting() {
             </div>
             <div onClick={handleCurrentTyped}>
                 <input type="checkbox" checked={showCurrentTyped} onChange={handleCurrentTyped} />
-                Show typed letter above current word
+                Show typed letters
             </div>
         </div>
     )

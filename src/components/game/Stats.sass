@@ -4,11 +4,15 @@
 .statsCtn
     width: 100%
     display: flex
+    margin-top: 3rem
     justify-content: space-around
-    align-items: flex-end
-    padding-left: $FONT-SIZE
-    padding-right: $FONT-SIZE
-    padding-left: 45%
+    // justify-content: flex-start
+    // gap: 3rem
+    align-items: center
+    // align-items: flex-end
+    // padding-left: $FONT-SIZE * 2
+    padding-right: $FONT-SIZE * 2
+    // padding-left: 45%
 
 .speedInd
     color: var(--text-secondary)
@@ -32,16 +36,13 @@
         font-size: 0.7 * $FONT-SIZE
 
 .timerWrapper
-    display: flex
-    flex-direction: column
-    justify-content: space-around
     position: relative
 
 .timer
     color: var(--text-secondary)
     line-height: 1.7 * $FONT-SIZE
     font-size: 1.5 * $FONT-SIZE
-    padding-bottom: 0.2 * $FONT-SIZE
+    // padding-bottom: 0.2 * $FONT-SIZE
 
 .showStats
     position: absolute
@@ -52,3 +53,6 @@
         cursor: pointer
         color: var(--text-disabled)
     // right: 0
+
+.gearIcon
+    font-size: 1.7rem

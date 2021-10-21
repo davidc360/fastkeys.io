@@ -14,7 +14,7 @@ import { windowIsScrollable } from '../shared/helpers'
 import { setScrollable } from '../../ducks/modules/UI'
 import { setShow as setShowSettings } from "../../ducks/modules/settings"
 
-import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc, wordCodesToWords} from "../shared/helpers"
+import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc, wordCodesToWords } from "../shared/helpers"
 import {
     startGame,
     icrActiveRow,
@@ -75,12 +75,12 @@ export default function Game() {
 
         <BrowserView>
             <div className={styles.gameContainer}>
-                <Settings />
                 {/* if game hasn't started or is in progress, show the words on screen  */}
                 {(!gameStarted || gameInProgress) ?
                 <>
                     <WordDisplay gameId={gameId}/>
                     <Stats />
+                    <Settings />
                 </>
                 // otherwise, show the end game component        
                 : <EndGame />}

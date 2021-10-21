@@ -1,28 +1,38 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import styles from './Stats.module.sass'
-import { InfIcon } from '../shared/Icons'
+// import styles from './Stats.module.sass'
+import './Stats.sass'
+import { InfIcon, GearIcon } from '../shared/Icons'
 import { endGame } from '../../ducks/modules/game'
+import Settings from './Settings'
+
+import {
+    setShow
+} from '../../ducks/modules/settings'
 
 export default function Stats() {
-  const partialSpeed = useSelector(state => state.game.speed.partial)
-  return (
-    <div className={styles.statsCtn}>
-      <SpeedIndicator
-        speed={Math.round(partialSpeed)}
-        type={'current'} />
-      <Timer />
-    </div>
+    const dispatch = useDispatch()
+    const partialSpeed = useSelector(state => state.game.speed.partial)
+    const showSettings = useSelector(state => state.settings.show)
+    
+    return (
+        <div className={'statsCtn'}>
+        <SpeedIndicator
+            speed={Math.round(partialSpeed)}
+            type={'current'} />
+        <Timer />
+            <GearIcon className='gearIcon' onClick={()=>dispatch(setShow(!showSettings))}/>
+        </div>
   )
 }
 
 function SpeedIndicator({ speed, type }) {
   return (
-    <div className={styles.speedInd}>
+    <div className='speedInd'>
       <div>
-        <div className={styles.speedText}>{speed}</div>
+        <div className='speedText'>{speed}</div>
       </div>
-      <div className={styles.speedUnit}>
+      <div className='speedUnit'>
         <div>{type}</div>
         <div>WPM</div>
       </div>
@@ -36,18 +46,18 @@ function Timer() {
     const elapsed = useSelector(state => state.game.timer.elapsed)
     const timeLeft = Math.round(timeMode - elapsed/1000)
     return (
-        <div className={styles.timerWrapper}>
-        <div className={styles.timer}>
-            {timeMode === 0
-                    ? (<>
-                            00: <InfIcon />
-                            <div className={styles.showStats}
-                                onClick={ ()=>dispatch(endGame()) } >
-                                stop
-                            </div>
-                        </>)
-                : elapsed > 0 ? secToMMSS(timeLeft) : secToMMSS(timeMode)}
-        </div>
+        <div className='timerWrapper'>
+            <div className='timer'>
+                {timeMode === 0
+                        ? (<>
+                                00: <InfIcon />
+                                <div className='showStats'
+                                    onClick={ ()=>dispatch(endGame()) } >
+                                    stop
+                                </div>
+                            </>)
+                    : elapsed > 0 ? secToMMSS(timeLeft) : secToMMSS(timeMode)}
+            </div>
         </div>
     )
 }
