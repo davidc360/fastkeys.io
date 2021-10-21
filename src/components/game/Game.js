@@ -74,18 +74,16 @@ export default function Game() {
         </MobileView>
 
         <BrowserView>
-            <div className={styles.gameContainer}>
                 {/* if game hasn't started or is in progress, show the words on screen  */}
                 {(!gameStarted || gameInProgress) ?
-                <>
+                <div className={styles.gameContainer}>
                     <WordDisplay gameId={gameId}/>
                     <Stats />
                     <Settings />
-                </>
+                </div>
                 // otherwise, show the end game component        
                 : <EndGame />}
                 <ScrollIndicator />
-            </div>
         </BrowserView>
         </>
     )

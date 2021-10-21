@@ -13,24 +13,43 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     text-align: center
     animation: slideUp 0.5s ease
 
+    
+    // grid-template-rows: auto auto auto auto
+
     *
         text-shadow: $TEXT-SHADOW
+
+.titleCtn
+    display: grid
+    grid-template-columns: 50px 50px 50px
+    justify-content: center
 
 .title
     font-size: 2.1 * $ENDGAMEFONT
     margin-bottom: 1em
-    padding-left: 2rem
+    grid-column: 2
+    grid-row: 1
+    justify-self: center
 
 .statCtn
-    display: flex
-    justify-content: center    
-    gap: 2em
-    height: $BIGGER-STAT
-    width: 100%
+    display: grid
+    grid-template-columns: 50px 50px 50px
+    grid-template-rows: auto
+    justify-content: center
+    align-items: end
+
+    >:first-child
+        grid-row: 1
+        grid-column: 1
+        justify-self: end
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start
     
 .alignBtmCtn
-    height: 7.6 * $ENDGAMEFONT
-    position: relative
+    vertical-align: top
 
     &::before
         display: inline-block
@@ -41,9 +60,10 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     display: flex
     flex-direction: column
     align-self: flex-end
+    padding-bottom: 1em
 
 .speedCtn
-    margin-right: 1.5 * $ENDGAMEFONT
+    // margin-right: 1.5 * $ENDGAMEFONT
 
 .speedText
     font-size: $BIGGER-STAT
@@ -70,13 +90,21 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     text-shadow: $TEXT-SHADOW 
 
 .wrongKeysCtn
-    margin-top: 3em
-    display: flex
-    justify-content: space-evenly
-    gap: 2em
-    // margin-top: 3.5 * $ENDGAMEFONT
-    // padding-left: 10 * $ENDGAMEFONT
-    // padding-right: 4 * $ENDGAMEFONT
+    display: grid
+    grid-template-columns: repeat(3, 50px)
+    justify-content: center
+    margin-top: 4rem
+    padding-right: 1rem
+
+    >:first-child
+        grid-row: 1
+        grid-column: 2
+        justify-self: center
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start
 
 .tableCtn
     display: block
@@ -100,7 +128,6 @@ table
     &:hover
         color: var(--text-disabled)
         cursor: pointer
-
 
 .pressEnter
     display: flex
@@ -170,11 +197,27 @@ table
         border-color: var(--text-disabled)
 
 .actionButtons
-    display: flex
+    // grid
+    display: grid
+    grid-template-columns: repeat(3, 50px)
     justify-content: center
-    gap: 2em
-    align-items: flex-start
-    margin-top: 3em
+    margin-top: 3rem
+    padding-left: 2rem
+
+    >:first-child
+        grid-row: 1
+        grid-column: 1
+        justify-self: end
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start        
+
+    //flex
+    // display: flex
+    // justify-content: center
+    // gap: 2em
         
 .gameLink
     animation: slideDown 5s ease

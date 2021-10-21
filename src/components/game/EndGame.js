@@ -105,7 +105,9 @@ export default function () {
 
     return (
         <div className={styles.endGameCtn}>
-            <div className={styles.title}>Stats</div>
+            <div className={styles.titleCtn}>
+                <div className={styles.title}>Stats</div>
+            </div>
             <Stats />
             <div className={styles.actionButtons}>
                 <div className={styles.createLinkCtn}>
@@ -178,25 +180,25 @@ function WrongKeys() {
                     ? (
                         <div className={styles.noMissed}>You did not miss type a single key!</div>
                     ) : (
-                        <div className={styles.tableCtn}>
-                            <div className={styles.tableLabel}>
-                                <ToolTip tooltext={'These are most common letters you did not get correct.'}>
-                                    Top characters you missed <QuestionIcon />
-                                </ToolTip>
-                            </div>
-                                <IncLetTable incLetters={missedKeysOnly} type={'missedKeys'} />
-                        </div>
+                        // <div className={styles.tableCtn}>
+                        //     <div className={styles.tableLabel}>
+                        //         <ToolTip tooltext={'These are most common letters you did not get correct.'}>
+                        //             Top characters you missed <QuestionIcon />
+                        //         </ToolTip>
+                        //     </div>
+                            <IncLetTable incLetters={missedKeysOnly} type={'missedKeys'} />
+                        // </div>
                     )
             }
-             <div className={styles.tableCtn}>
-                <div className={styles.tableLabel}>
-                    <ToolTip tooltext={'Keys you missed and what you\'re typing instead.'}>
-                        Keys you mistype <QuestionIcon />
-                    </ToolTip>
+             {/* <div className={styles.tableCtn}> */}
+                {/* <div className={styles.tableLabel}> */}
+                    {/* <ToolTip tooltext={'Keys you missed and what you\'re typing instead.'}> */}
+                        {/* Keys you mistype <QuestionIcon /> */}
+                    {/* </ToolTip> */}
                     {/* <div>Keys You Mistype</div> */}
-                </div>
-                <IncLetTable incLetters={overallStats} type={'typedKeys'} />
-            </div>
+                {/* </div> */}
+                {/* <IncLetTable incLetters={overallStats} type={'typedKeys'} /> */}
+            {/* </div> */}
         </div >
     )
 }
@@ -217,21 +219,34 @@ function IncLetTable({ incLetters, type }) {
                 )
         }
     }
+
+    if (trs.length === 0) {
+        console.log('returning null')
+        return null
+    }
     return (
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    <td>missed key</td>
-                    {type === 'typedKeys' && (
-                     <td>you typed</td>   
-                    )}
-                    <td>#</td>
-                </tr>
-            </thead>
-            <tbody>
-                {trs.length > 0 ? trs : <tr><td colSpan={3}>Not enough data.</td></tr>}
-            </tbody>
-        </table> 
+        <div className={styles.tableCtn}>
+            <div className={styles.tableLabel}>
+                <ToolTip tooltext={'These are most common letters you did not get correct.'}>
+                    Top characters you missed <QuestionIcon />
+                </ToolTip>
+            </div>
+            <table className={styles.table}>
+                <thead>
+                    <tr>
+                        <td>missed key</td>
+                        {type === 'typedKeys' && (
+                        <td>you typed</td>   
+                        )}
+                        <td>#</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {trs}
+                </tbody>
+            </table> 
+        </div>
+        
     )
 }
 
