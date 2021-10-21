@@ -22,7 +22,8 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
 
 .statCtn
     display: flex
-    justify-content: space-evenly
+    justify-content: center    
+    gap: 2em
     height: $BIGGER-STAT
     width: 100%
     
@@ -53,35 +54,35 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     margin-top: 3 * $ENDGAMEFONT
 
 .accLabel
-    font-size: 1.2 * $ENDGAMEFONT
+    font-size: 1rem
     text-align: right
  
 .adjLabel
-    font-size: 0.6 * $ENDGAMEFONT
+    font-size: 0.6rem
     text-align: right
  
 .accNum
-    font-size: $SMALLER-STAT
+    font-size: 5rem
 
 .percent
-    font-size: $SMALLER-STAT * 0.7 
+    font-size: 3rem
     text-shadow: $TEXT-SHADOW 
 
 .wrongKeysCtn
+    margin-top: 3em
     display: flex
-    justify-content: flex-end
-    margin-top: 3.5 * $ENDGAMEFONT
-    padding-left: 10 * $ENDGAMEFONT
+    justify-content: space-evenly
+    gap: 2em
+    // margin-top: 3.5 * $ENDGAMEFONT
+    // padding-left: 10 * $ENDGAMEFONT
     // padding-right: 4 * $ENDGAMEFONT
 
+.tableCtn
+    display: block
+
 .tableLabel
-    display: flex
-    flex-direction: column
-    align-self: center
     font-size: 0.9 * $ENDGAMEFONT
-    width: 60 * $ENDGAMEFONT
-    margin-right: 1.6 * $ENDGAMEFONT
-    margin-bottom: 5%
+    margin-bottom: 1em
  
 table, th, td
     border-collapse: collapse
@@ -93,6 +94,7 @@ table
     box-shadow: 4px 5px 5px var(--shadow-color)
 
 .restartCtn
+    font-size: 1.8rem
     padding-top: 0.4em
     &:hover
         color: var(--text-disabled)
@@ -171,7 +173,7 @@ table
     justify-content: center
     gap: 2em
     align-items: flex-start
-    margin-top: 1.5em
+    margin-top: 3em
         
 .gameLink
     animation: slideDown 5s ease

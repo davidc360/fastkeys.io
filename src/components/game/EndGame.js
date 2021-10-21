@@ -82,16 +82,6 @@ export default function () {
         })
     }
 
-    function Mode() {
-        return (
-            <div className={styles.modeCtn}>
-                 With capitalization: {withCaps.toString()} <br/>
-                 With punctuation: {withPunc.toString()}
-            </div>
-        )
-    }
-    
-
     function Stats() {
         return (
             <div className={styles.statCtn}>
@@ -132,7 +122,6 @@ export default function () {
                     </div>
                 </div>
             </div>
-            <Mode />
             <WrongKeys />
         </div>
     );
@@ -183,13 +172,13 @@ function WrongKeys() {
     const overallStats = (locOverallStats && JSON.parse(locOverallStats)) ?? {}
 
     return (
-        <div className={styles.ctn}>
+        <div className={styles.wrongKeysCtn}>
             {
                 missedKeysOnly.length === 0
                     ? (
                         <div className={styles.noMissed}>You did not miss type a single key!</div>
                     ) : (
-                        <div className={styles.wrongKeysCtn}>
+                        <div className={styles.tableCtn}>
                             <div className={styles.tableLabel}>
                                 <ToolTip tooltext={'These are most common letters you did not get correct.'}>
                                     Top characters you missed <QuestionIcon />
@@ -199,7 +188,7 @@ function WrongKeys() {
                         </div>
                     )
             }
-             <div className={styles.wrongKeysCtn}>
+             <div className={styles.tableCtn}>
                 <div className={styles.tableLabel}>
                     <ToolTip tooltext={'Keys you missed and what you\'re typing instead.'}>
                         Keys you mistype <QuestionIcon />
