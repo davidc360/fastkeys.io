@@ -32,6 +32,7 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     justify-self: center
 
 .statCtn
+    grid implementation to align the gap in the middle
     display: grid
     grid-template-columns: 50px 50px 50px
     grid-template-rows: auto
@@ -40,13 +41,20 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
 
     >:first-child
         grid-row: 1
-        grid-column: 1
+        grid-column: 2
         justify-self: end
 
     >:nth-child(2)
         grid-row: 1
         grid-column: 3
         justify-self: start
+        transform: translateX(50px)
+
+    // flex implementation for center in the middle
+    // display: flex
+    // justify-content: center
+    // align-items: flex-end
+    // gap: 50px
     
 .alignBtmCtn
     vertical-align: top
@@ -207,7 +215,7 @@ table
 .actionButtons
     // grid
     display: grid
-    grid-template-columns: repeat(3, 50px)
+    grid-template-columns: 75px 37.5px 37.5px
     justify-content: center
     margin-top: 3rem
     padding-left: 2rem
