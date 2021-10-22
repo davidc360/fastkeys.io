@@ -48,7 +48,7 @@ def post_game():
         while gamesdb.find_one({"id": game_id}) is not None:
             game_id = str(uuid.uuid4())[:8]
         doc['id'] = game_id
-        # gamesdb.insert_one(doc)
+        gamesdb.insert_one(doc)
         return jsonify(game_id)
 
 @app.route('/game/<game_id>', methods=['GET', 'DELETE'])
