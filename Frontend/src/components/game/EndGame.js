@@ -45,8 +45,27 @@ export default function () {
         dispatch(setUsername(e.target.value)) 
     }
 
-    function copyLinkFunc(e) {
-        console.log('copy link')
+    const linkRef = useRef()
+    const buttonCopyTimeoutRef = useRef()
+    function buttonCopyLink(e) {
+        const link = linkRef.current.value
+        navigator.clipboard.writeText(link)
+        setCreateLinkButtonText('Copied!')
+        clearTimeout(buttonCopyTimeoutRef.current)
+        buttonCopyTimeoutRef.current = setTimeout(() => {
+            setCreateLinkButtonText('Copy')
+        }, 1000)
+    }
+
+    const inputCopyTimeoutRef = useRef()
+    function inputCopyLink(e) {
+        const link = linkRef.current.value
+        navigator.clipboard.writeText(link)
+        linkRef.current.value = 'Copied!'
+        clearTimeout(inputCopyTimeoutRef.current)
+        inputCopyTimeoutRef.current = setTimeout(() => {
+            linkRef.current.value  = 'https://types.ink/game/' + gameId
+        }, 1000)
     }
 
     function createLinkFunc(e) {
@@ -111,8 +130,8 @@ export default function () {
             <Stats />
             <div className={styles.actionButtons}>
                 <div className={styles.createLinkCtn}>
-                    <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : copyLinkFunc }>{createLinkButtonText}</div>
-                    {gameId && <input className={styles.gameLink} value={'http://types.ink/game/' + gameId} />}
+                    <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
+                    {gameId && <input readOnly className={`${styles.gameLink} ${styles.yourName}`} value={'https://types.ink/game/' + gameId} ref={linkRef} onClick={inputCopyLink}/>}
                     <input className={styles.yourName} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} />
                 </div>
                 <div className={styles.restartCtn} onClick={restartGame}>

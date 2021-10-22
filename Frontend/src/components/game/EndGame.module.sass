@@ -195,8 +195,8 @@ table
         border-color: var(--text-disabled)
 
 .yourName
-    width: 80%
-    font-size: 1rem
+    width: 90%
+    font-size: 0.95rem
     vertical-align: center
     height: 2em
     border: None
@@ -231,9 +231,13 @@ table
         justify-self: start
         
 .gameLink
-    animation: slideDown 5s ease
+    animation: slideDown 1s ease-out forwards
     height: 0
     padding: 0
+
+    &:hover
+        color: gray
+        cursor: pointer
 
 @keyframes slideDown
     0% 
