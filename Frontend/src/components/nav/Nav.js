@@ -17,6 +17,7 @@ export default function () {
     return (
         <nav>
             <ul className={styles.navLinks}>
+                <li><a href="/">Home</a></li>
                 <li onClick={toggleTheme} className={`${styles.link} ${styles.lightSwitch}`}>{theme}</li>
             </ul>
         </nav>
