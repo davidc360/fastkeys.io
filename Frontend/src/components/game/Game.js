@@ -52,7 +52,7 @@ export default function Game() {
     // every time a user scrolls, update the scrollable state again, 
     // in case they scroll to the bottom and the page becomes no longer scrollable
     // and vice versa
-    useEffect(set_scroll_listener => {
+    useEffect(() => {
         window.addEventListener('scroll', updatePageScrollable)
         return () => { window.removeEventListener('scroll', updatePageScrollable) }
     }, [])
@@ -376,6 +376,7 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                                 ref={isNextFocus ? nextWordEl : null}
                                 isOpponentPos={letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
                                 oppName={oppData?.name}
+                                shouldBlink={row === 0 && wi === 0 && li === 0 && !gameInProgress}
                             />
                         )
                         letCnt++
@@ -467,7 +468,7 @@ const WordWrapper = memo(({ children }) => {
     return <div className={styles.wordWrapper}>{children}</div>
 })
 
-const Letter = memo(forwardRef(({ text, isCorrect, focus, isOpponentPos, oppName }, ref) => {
+const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponentPos, oppName }, ref) => {
     return(
         <div
             className={`${styles.letter}
@@ -477,12 +478,13 @@ const Letter = memo(forwardRef(({ text, isCorrect, focus, isOpponentPos, oppName
                 }
                 ${focus ? styles.letterFocus : ""}
                 ${isOpponentPos ? styles.opponentPosition : ""}
+                ${shouldBlink ? styles.blink : ""}
             `}
             ref={ref}
         >
             <div className={isCorrect !== undefined ? styles.letterAnimation : ''}></div>
             {isOpponentPos && <div className={styles.oppName}>{ oppName }</div>}
             {text}
-            </div>
+        </div>
     )
 }))
