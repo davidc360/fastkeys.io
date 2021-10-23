@@ -44,6 +44,8 @@ def post_game():
         doc['ws'] = params.get('words')
         doc['st'] = params.get('stats')
         doc['m'] = params.get('mode')
+        doc['wpm'] = params.get('stats').get('speed')
+        doc['acc'] = params.get('stats').get('accuracy')
         game_id = str(uuid.uuid4())[:8]
         while gamesdb.find_one({"id": game_id}) is not None:
             game_id = str(uuid.uuid4())[:8]
