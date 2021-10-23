@@ -34,7 +34,7 @@ function Settings() {
 function SettingsPane({ show }) {
     const version = useSelector(state => state.settings.version)
     const showSty = {
-        maxHeight: '7em',
+        maxHeight: '8em',
         transition: 'max-height 0.5s ease',
         overflow: 'hidden'
     }

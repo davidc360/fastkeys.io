@@ -93,7 +93,7 @@ export default function () {
             sequence: positionSequence,
             mode: { withPunc, withCaps, timeMode },
             words: wordsTypedCodes,
-            stats: { speed: Math.round(speed), accuracy: Math.round(accuracy) }
+            stats: { speed: Math.round(speed), accuracy: accuracy.toFixed(2) }
         }).then(resp => {
             clearInterval(loadingDotsInterval)
             setCreateLinkButtonText('Copy')

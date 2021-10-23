@@ -34,7 +34,6 @@ export const SET_TYPED_FULL_WORDS        = 'SET_TYPED_FULL_WORDS'
 // activeRow is the current active row on the screen
 // activeRowId is id of the current active row, or the count how many rows have been rendered so far
 const initialState = {
-    // words             : [],
     activeRow            : 0,
     activeRowId          : 0,
     gameInProgress       : false,
@@ -53,6 +52,10 @@ const initialState = {
 
 const reducer = produce((draft, action = {}) => {
     switch (action.type) {
+        case 'SET_FIRST_LETTER_OFFSET':
+            draft.firstLetterOffset = action.offset
+            return
+
         case START_GAME:
             draft.timer.start = action.startTime
             draft.gameInProgress = true
@@ -180,7 +183,7 @@ const reducer = produce((draft, action = {}) => {
             return
         
         case RESET_GAME:
-            return initialState
+            return { ...draft, ...initialState }
   }
 }, initialState)
 
@@ -292,5 +295,9 @@ export const setOpponentData= data => ({
     value: data
 })
 
+export const setFirstLetterOffset = offset => ({
+    type: 'SET_FIRST_LETTER_OFFSET',
+    offset: offset
+})
 
 export default reducer

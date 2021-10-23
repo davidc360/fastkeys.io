@@ -14,6 +14,8 @@ import { windowIsScrollable } from '../shared/helpers'
 import { setScrollable } from '../../ducks/modules/UI'
 import { setShow as setShowSettings } from "../../ducks/modules/settings"
 
+import { ImArrowDown } from 'react-icons/im'
+
 import { getRandomWords, INCORRECT_SYMBOL, formatWordSet, randomEndingPunc, wordHasEndingPunc, wordCodesToWords } from "../shared/helpers"
 import {
     startGame,
@@ -29,7 +31,8 @@ import {
     setOpponentPos,
     setRowNums,
     setOpponentData,
-    resetGame
+    resetGame,
+    setFirstLetterOffset
 } from "../../ducks/modules/game"
 
 import { useParams } from 'react-router-dom'
@@ -37,11 +40,34 @@ import { BrowserView, MobileView } from "react-device-detect"
 
 export default function Game() {
     const { gameId } = useParams()
+    const oppData    = useSelector(state => state.game.opponentData)
 
+    // have a welcome text that says "type to start"
+    // typed out letter by letter
+    // const [displayedText, setDisplayedText] = useState('')
+    // const reverseDisplayText = useRef(false)
+    // const welcomeText = `Type to start!`
+    // useEffect(() => {
+    //     if (gameInProgress) {
+    //         setDisplayedText('')
+    //         return
+    //     }
+    //     if (displayedText.length === welcomeText.length) {
+    //         reverseDisplayText.current = true
+    //     } else if (displayedText.length === 0) {
+    //         reverseDisplayText.current = false
+    //     } 
+    //     setTimeout(()=> setDisplayedText(welcomeText.slice(0, reverseDisplayText.current ? displayedText.length - 1 : displayedText.length + 1)), displayedText.length === welcomeText.length ? 1000 : 60 + Math.random() * 150 )
+    // })
+
+    
     const dispatch = useDispatch()
     const gameInProgress = useSelector(state => state.game.gameInProgress)
     const startTime = useSelector(state => state.game.timer.start)
     const gameStarted = (startTime !== null)
+    
+    // align the type to start arrow with first letter
+    const firstLetterOffset = useSelector(state => state.game.firstLetterOffset)
 
     // Store the state of whether the page has more content than the window height, making it scrollable
     function updatePageScrollable() {
@@ -62,46 +88,16 @@ export default function Game() {
         updatePageScrollable()
     })
 
-    // When first rendered, reset the game states
-    useEffect(() => {
-        return () => dispatch(resetGame())
-    }, [])
-
-    return (
-        <>
-        <MobileView>
-            Please view this on a desktop browser.
-        </MobileView>
-
-        <BrowserView>
-                {/* if game hasn't started or is in progress, show the words on screen  */}
-                {(!gameStarted || gameInProgress) ?
-                <div className={styles.gameContainer}>
-                    <WordDisplay gameId={gameId}/>
-                    <Stats />
-                    <Settings />
-                </div>
-                // otherwise, show the end game component        
-                : <EndGame />}
-                <ScrollIndicator />
-        </BrowserView>
-        </>
-    )
-}
-
-function WordDisplay({ gameId }) {
+    // render words
     // see ducks/modules/game for explanation of state variables
     // and how words are displayed on screen
-
-    const dispatch = useDispatch()
-    // the number of rows of words to render
     const numRows = useSelector(state => state.settings.numRows)
+
     // the current active row 
     const activeRowId    = useSelector(state => state.game.activeRowId)
     const WordRows  = []
     
     const [loadingData, setLoadingData] = useState(gameId !== undefined)
-
     // set Opponent positions
     useEffect(() => {
         if (gameId !== undefined) {
@@ -116,6 +112,8 @@ function WordDisplay({ gameId }) {
                     newOppData.sequence = res.data.se
                     newOppData.stats = res.data.st
                     newOppData.mode = res.data.m
+                    newOppData.wpm = res.data.wpm
+                    newOppData.accuracy = res.data.acc
                     dispatch(setOpponentData(newOppData))
                     dispatch(setOpponentPos(0, 0))
                     // dispatch(setOppName(res.data.usr))
@@ -128,10 +126,9 @@ function WordDisplay({ gameId }) {
         }
     }, [])
 
-    useEffect(() => {
-        console.log(gameId)
-    }, [])
-
+    // useEffect(() => {
+    //     console.log(gameId)
+    // }, [])
 
     for (let i = 0;  i < numRows; i++) {
         WordRows.push(
@@ -141,10 +138,41 @@ function WordDisplay({ gameId }) {
             /> 
         )
     }
+
     return (
-        <div className={styles.wordsAreaContainer}>
-            {WordRows}
-        </div>
+        <>
+        <MobileView>
+            Please view this on a desktop browser.
+        </MobileView>
+
+        <BrowserView>
+                {/* if game hasn't started or is in progress, show the words on screen  */}
+                {(!gameStarted || gameInProgress) ?
+                <div className={styles.gameContainer}>
+                    <div className={styles.welcomeMessage}>
+                            { oppData !== undefined && `${oppData.name} challenged you to type ${oppData.wpm}WPM with ${oppData.accuracy * 100}% accuracy on the set of words below!`}
+                    </div>
+                    {/* if the first letter offset isn't set yet, don't show the arrow! */}
+                    {(!gameInProgress && firstLetterOffset !== undefined) && (
+                        <div className={styles.promptWrapper}>
+                            <div className={styles.prompt}>
+                                {/* {displayedText} */}
+                                Type to start!
+                                <div className={styles.startArrow} style={{ paddingLeft: firstLetterOffset + 'px' }}><ImArrowDown /></div>
+                            </div>
+                        </div>
+                    )}
+                    <div className={styles.wordsAreaContainer}>
+                        {WordRows}
+                    </div>
+                    <Stats />
+                    <Settings />
+                </div>
+                // otherwise, show the end game component        
+                : <EndGame />}
+                <ScrollIndicator />
+        </BrowserView>
+        </>
     )
 }
 
@@ -374,7 +402,7 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                                 isCorrect={shouldEval ? isCorrect : undefined}
                                 focus={active ? isNextFocus : false}
                                 ref={isNextFocus ? nextWordEl : null}
-                                isOpponentPos={letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
+                                isOpponentPos={gameInProgress && letCnt === opponentPos?.pos && rowNums[row] === opponentPos?.row}
                                 oppName={oppData?.name}
                                 shouldBlink={row === 0 && wi === 0 && li === 0 && !gameInProgress}
                             />
@@ -469,6 +497,32 @@ const WordWrapper = memo(({ children }) => {
 })
 
 const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponentPos, oppName }, ref) => {
+    const dispatch = useDispatch()
+    const gameInProgress = useSelector(state => state.game.gameInProgress)
+
+    useEffect(() => {
+        if (!focus) return
+        if (gameInProgress) return
+        
+        // get the element's left offset to calculate where the arrow needs to be
+        const letter = ref.current
+
+        // sometimes the element changes position after initial render
+        // and doesn't update the offset value (most likely because of using memo)
+        // to work around, use a set interval, then set it to clear after 1 sec
+        let mspassed = 0
+        const offsetChecker = setInterval(() => {
+            const letterWidth = letter.offsetWidth
+            const letterLeft = letter.parentNode.offsetLeft
+
+            const calculateLeftPadding = letterLeft - 10 + letterWidth/2
+            dispatch(setFirstLetterOffset(calculateLeftPadding))
+            mspassed += 10
+
+            if (mspassed > 1000) clearInterval(offsetChecker)
+        }, 10)
+    }, [])
+
     return(
         <div
             className={`${styles.letter}
@@ -483,7 +537,8 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
             ref={ref}
         >
             <div className={isCorrect !== undefined ? styles.letterAnimation : ''}></div>
-            {isOpponentPos && <div className={styles.oppName}>{ oppName }</div>}
+            {/* {shouldBlink && <div className={styles.aboveWord}>Type to start</div>} */}
+            {isOpponentPos && <div className={styles.aboveWord}>{ oppName }</div>}
             {text}
         </div>
     )
