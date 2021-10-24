@@ -37,9 +37,7 @@ def post_game():
         doc = {}
         params = request.get_json()
         
-        name = params.get('username')
-        if name is not None:
-            doc['usr'] = name
+        doc['usr'] = params.get('username')
         doc['se'] = params.get('sequence')
         doc['ws'] = params.get('words')
         doc['st'] = params.get('stats')

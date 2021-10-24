@@ -41,10 +41,6 @@ export default function () {
         dispatch(resetGame())
     }
 
-    function updateUsername(e) {
-        dispatch(setUsername(e.target.value)) 
-    }
-
     const linkRef = useRef()
     const buttonCopyTimeoutRef = useRef()
     function buttonCopyLink(e) {
@@ -68,7 +64,22 @@ export default function () {
         }, 1000)
     }
 
+    const nameInputRef = useRef()
+    function updateUsername(e) {
+        const value = e.target.value.replace(/[^a-zA-Z\d]/ig, "")
+        dispatch(setUsername(value)) 
+        if (value.length === 0) {
+            nameInputRef.current.classList.add(styles.nameEmpty)
+        } else {
+            nameInputRef.current.classList.remove(styles.nameEmpty)
+        }
+    }
     function createLinkFunc(e) {
+        if (username === undefined || username.length === 0) {
+            nameInputRef.current.focus()
+            nameInputRef.current.classList.add(styles.nameEmpty)
+            return
+        }
         e.onClick = null
         const wordsTypedCodes = wordsetToCodes(typedFullWords)
         console.log({
@@ -132,7 +143,7 @@ export default function () {
                 <div className={styles.createLinkCtn}>
                     <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
                     {gameId && <input readOnly className={`${styles.gameLink} ${styles.yourName}`} value={'https://types.ink/game/' + gameId} ref={linkRef} onClick={inputCopyLink}/>}
-                    <input className={styles.yourName} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (optional)" maxLength={40} />
+                    <input className={styles.yourName} ref={nameInputRef} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (required)" maxLength={40} />
                 </div>
                 <div className={styles.restartCtn} onClick={restartGame}>
                     <div>
@@ -238,7 +249,6 @@ function IncLetTable({ incLetters, type }) {
     }
 
     if (trs.length === 0) {
-        console.log('returning null')
         return null
     }
     return (
