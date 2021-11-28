@@ -1,0 +1,152 @@
+@import '../shared/shared.sass'
+@import '../shared/animations.sass'
+
+.gameContainer
+    display: flex
+    flex-direction: column
+    align-items: center
+    width: $CONTENT-WIDTH
+    margin: 0 auto
+    position: relative
+    margin-bottom: 4 * $FONT-SIZE
+    max-width: 100%
+    padding-top: 11vh
+
+.welcomeMessage
+    font-size: $FONT-SIZE * 0.8
+    padding-left: 20%
+    padding-right: 20%
+    padding-bottom: 9rem
+
+.promptWrapper
+    position: relative
+    align-self: flex-start
+    width: 10em
+
+.prompt
+    font-size: $FONT-SIZE * 0.8
+    animation: bounce 0.5s infinite alternate-reverse
+    position: absolute
+    text-align: left
+    top: -2.3em
+
+    &:after
+        content: '.';
+        visibility: hidden;
+
+    > div
+        margin-top: 0.2em
+
+button
+  border: none
+  padding: 0
+
+.wordsAreaContainer 
+    width: 100%
+    margin-bottom: 0.7 * $FONT-SIZE
+    // margin-top: 20vh
+
+.wordsRow 
+    font-size: 1.8rem
+    height: 2.5 * $FONT-SIZE
+    padding: 0.5 * $FONT-SIZE
+    // padding-top: 0.5 * $FONT-SIZE
+    // padding-bottom: 0.25 * $FONT-SIZE
+    overflow: hidden
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    animation: slideUp 0.5s ease-out 
+    justify-content: center
+    
+.wordWrapper
+    height: 2 * $FONT-SIZE
+    position: relative
+    display: flex
+    flex-direction: row
+    align-items: flex-end
+
+.opponentPosition
+    background-color: lightgray
+
+.letter
+    height: 100%
+    line-height: 2 * $FONT-SIZE
+
+.letterFocus
+    background-color: var(--letter-focus)
+    border-bottom: 2px solid var(--text-color)
+
+.letterCorrect 
+    background-color: var(--letter-correct)
+    position: relative
+
+.letterIncorrect 
+    background-color: var(--letter-incorrect)
+    position: relative
+
+.aboveWord
+    position: absolute
+    margin-top: -2rem
+    font-size: 0.5em
+    white-space: nowrap
+
+.space::after
+    content: '.'
+    visibility: hidden
+    
+.letterAnimation
+    visibility: hidden
+    position: absolute
+    transform-origin: bottom
+    background-color: gray
+    width: 100%
+    height: 100%
+    margin-top: 0
+    animation: growUp 0.3s forwards
+
+.currentTypedWordCtn
+    position: absolute
+    left: 0
+    top: -0.65 * $FONT-SIZE
+    white-space: nowrap
+    // line-height: 2 * $FONT-SIZE
+    // color: var(--text-secondary)
+    // background-color: var(--background-color)
+
+.blink
+    animation: blink 1s step-start infinite
+    > .aboveWord
+        animation: bounce 0.8s infinite alternate
+
+@-webkit-keyframes blink 
+  0%  
+      background-color: rgba(189, 189, 189, 1)
+      border-bottom-color: rgba(0,0,0,1)
+  50% 
+      background-color: rgba(189, 189, 189, 0)
+      border-bottom-color: rgba(0,0,0,0)
+  100% 
+      background-color: rgba(189, 189, 189, 1)
+      border-bottom-color: rgba(0,0,0,1)
+
+@keyframes blink 
+  0%  
+      background-color: rgba(189, 189, 189, 1)
+      border-bottom-color: rgba(0,0,0,1)
+  50% 
+      background-color: rgba(189, 189, 189, 0)
+      border-bottom-color: rgba(0,0,0,0)
+  100% 
+      background-color: rgba(189, 189, 189, 1)
+      border-bottom-color: rgba(0,0,0,1)
+
+@keyframes blink-text
+  0% { opacity: 1.0 }
+  50% { opacity: 0.0 }
+  100% { opacity: 1.0 }
+
+@-webkit-keyframes blink-text
+  0% { opacity: 1.0 }
+  50% { opacity: 0.0 }
+  100% { opacity: 1.0 }

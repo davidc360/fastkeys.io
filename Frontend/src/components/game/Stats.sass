@@ -1,0 +1,59 @@
+@import '../shared/shared.sass'
+@import '../shared/animations.sass'
+
+.statsCtn
+    width: 100%
+    display: flex
+    margin-top: 4rem
+    justify-content: space-evenly
+    // justify-content: flex-start
+    // gap: 3rem
+    align-items: center
+    // align-items: flex-end
+    // padding-left: 10%
+    // padding-right: 13%
+    // padding-left: 45%
+
+.speedInd
+    color: var(--text-secondary)
+    display: flex
+
+.speedText
+    font-size: 2.2rem
+
+.speedUnit
+    text-align: right
+    display: flex
+    flex-direction: column
+    justify-content: flex-end
+    padding-bottom: 0.3rem
+    margin-left: 0.3rem
+    >:first-child
+        font-size: 0.7rem
+
+    >:nth-child(2)
+        text-align: right
+        font-size: 0.8rem
+        padding-bottom: 0.1em
+
+.timerWrapper
+    position: relative
+
+.timer
+    color: var(--text-secondary)
+    line-height: 1.7 * $FONT-SIZE
+    font-size: 1.5rem
+    // padding-bottom: 0.2 * $FONT-SIZE
+
+.showStats
+    position: absolute
+    right: 0
+    text-align: right
+    animation: slideInRight 0.5s ease
+    &:hover
+        cursor: pointer
+        color: var(--text-disabled)
+    // right: 0
+
+.gearIcon
+    font-size: 1.4rem

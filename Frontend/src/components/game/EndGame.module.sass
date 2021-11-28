@@ -1,0 +1,255 @@
+@import '../shared/shared.sass'
+@import '../shared/animations.sass'
+
+$ENDGAMEFONT: 20px
+$BIGGER-STAT: 10 * $ENDGAMEFONT
+$SMALLER-STAT: 5 * $ENDGAMEFONT    
+$TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
+// $TEXT-SHADOW: 0.08em 0.08em 1px #CCCCCC 
+// $TEXT-SHADOW: min(0.1em, 2px) min(0.12em, 3px) 2px #CCCCCC 
+
+.endGameCtn
+    width: 100%
+    text-align: center
+    animation: slideUp 0.5s ease
+
+    
+    // grid-template-rows: auto auto auto auto
+
+    *
+        text-shadow: $TEXT-SHADOW
+
+.titleCtn
+    display: grid
+    grid-template-columns: 50px 50px 50px
+    justify-content: center
+
+.title
+    font-size: 2.1 * $ENDGAMEFONT
+    margin-bottom: 1em
+    grid-column: 3
+    grid-row: 1
+    justify-self: end
+
+.namedTitle
+    font-size: 2.1 * $ENDGAMEFONT
+    text-align: center
+
+.statCtn
+    // grid implementation to align the gap in the middle
+    display: grid
+    grid-template-columns: 50px 50px 50px
+    grid-template-rows: auto
+    justify-content: center
+    align-items: end
+    margin-bottom: 3rem
+
+    >:first-child
+        grid-row: 1
+        grid-column: 2
+        justify-self: end
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start
+        transform: translateX(50px)
+
+    // flex implementation for center in the middle
+    // display: flex
+    // justify-content: center
+    // align-items: flex-end
+    // gap: 50px
+    
+.alignBtmCtn
+    vertical-align: top
+
+    &::before
+        display: inline-block
+        height: 100%
+        content: ''
+
+.accCtn
+    display: flex
+    flex-direction: column
+    align-self: flex-end
+    padding-bottom: 1.6em
+
+.speedCtn
+    // margin-right: 1.5 * $ENDGAMEFONT
+
+.speedText
+    font-size: $BIGGER-STAT
+
+.speedUnit
+    font-size: 1.3 * $ENDGAMEFONT
+
+.noMissed
+    margin-top: 3 * $ENDGAMEFONT
+
+.accLabel
+    font-size: 1rem
+    text-align: right
+ 
+.adjLabel
+    font-size: 0.6rem
+    text-align: right
+ 
+.accNum
+    font-size: 5rem
+
+.percent
+    font-size: 3rem
+    text-shadow: $TEXT-SHADOW 
+
+.wrongKeysCtn
+    display: grid
+    grid-template-columns: repeat(3, 50px)
+    justify-content: center
+    margin-top: 4rem
+    padding-right: 1rem
+
+    >:first-child
+        grid-row: 1
+        grid-column: 2
+        justify-self: center
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start
+
+.tableCtn
+    display: block
+
+.tableLabel
+    font-size: 0.9 * $ENDGAMEFONT
+    margin-bottom: 1em
+ 
+table, th, td
+    border-collapse: collapse
+    border: 1px solid var(--text-color)
+    padding: 0.5 * $ENDGAMEFONT 1.5 * $ENDGAMEFONT
+    font-size: 1.5 * $ENDGAMEFONT
+
+table
+    box-shadow: 4px 5px 5px var(--shadow-color)
+
+.restartCtn
+    font-size: 1.8rem
+    padding-top: 0.4em
+
+    > div
+        display: flex
+        gap: 0.4em
+        margin-bottom: 0.1em
+
+    &:hover
+        color: var(--text-disabled)
+        cursor: pointer
+
+.pressEnter
+    display: flex
+    justify-content: flex-end
+    font-size: 0.5 * $ENDGAMEFONT
+    text-shadow: none
+
+.tooltip
+    align-self: flex-end
+    align-text: right
+    border-bottom: 1px dotted black
+    display: inline-block
+
+    &:hover
+        cursor: help
+
+.tooltext
+    text-align: initial
+    color: #fff
+    text-shadow: none
+    padding: 1 * $ENDGAMEFONT 0.7 * $ENDGAMEFONT 
+    background-color: black
+    box-shadow: 4px 4px 1px dimgray
+    white-space: pre-wrap
+    position: fixed
+    margin-bottom: 20px
+    max-width: 250px
+
+.modeCtn
+    display: inline-block
+    text-align: left
+    marign: auto
+    margin-top: $FONT-SIZE
+
+.createLinkCtn
+    display: flex
+    flex-direction: column
+
+.createLink
+    border: solid 1px black
+    display: inline-block
+    border-radius: 0.5em
+    padding: 0.5em
+    box-shadow: 3px 4px 5px var(--shadow-color)
+    width: 10em
+    text-shadow: None
+
+    &:hover
+        cursor: pointer
+        color: var(--text-disabled)
+        border-color: var(--text-disabled)
+
+.yourName
+    width: 90%
+    font-size: 0.90rem
+    vertical-align: center
+    height: 2em
+    border: None
+    display: inline-block
+    border-bottom: solid 1px black
+    text-align: center
+    // padding-top: 1.2em
+    margin: 0 auto
+    margin-top: 5px
+    text-shadow: None
+    outline: none
+
+    &:hover
+        border-color: var(--text-disabled)
+
+.actionButtons
+    // grid
+    display: grid
+    grid-template-columns: 75px 37.5px 37.5px
+    justify-content: center
+    padding-left: 2rem
+
+    >:first-child
+        grid-row: 1
+        grid-column: 1
+        justify-self: end
+
+    >:nth-child(2)
+        grid-row: 1
+        grid-column: 3
+        justify-self: start
+        
+.gameLink
+    animation: slideDown 1s ease-out forwards
+    height: 0
+    padding: 0
+
+    &:hover
+        color: gray
+        cursor: pointer
+
+.nameEmpty
+    border-bottom-color: red
+    color: red
+
+@keyframes slideDown
+    0% 
+        height: 0
+    
+    100% 
+        height: 2em
