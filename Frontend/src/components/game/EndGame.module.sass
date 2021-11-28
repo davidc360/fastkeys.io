@@ -31,6 +31,10 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     grid-row: 1
     justify-self: end
 
+.namedTitle
+    font-size: 2.1 * $ENDGAMEFONT
+    text-align: center
+
 .statCtn
     // grid implementation to align the gap in the middle
     display: grid
@@ -38,6 +42,7 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
     grid-template-rows: auto
     justify-content: center
     align-items: end
+    margin-bottom: 3rem
 
     >:first-child
         grid-row: 1
@@ -217,7 +222,6 @@ table
     display: grid
     grid-template-columns: 75px 37.5px 37.5px
     justify-content: center
-    margin-top: 3rem
     padding-left: 2rem
 
     >:first-child

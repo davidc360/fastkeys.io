@@ -6,6 +6,7 @@ import { resetGame } from '../../ducks/modules/game'
 import { setUsername } from '../../ducks/modules/settings'
 import axios from "axios"
 import { wordsetToCodes } from "../shared/helpers"
+import { ImHome2 } from "react-icons/im";
 
 export default function () {
     const username = useSelector(state => state.settings.username)
@@ -14,6 +15,8 @@ export default function () {
 
     const speed = useSelector((state) => state.game.speed.partial)
     const accuracy = useSelector(state => state.game.accuracy)
+
+    const oppData = useSelector(state => state.game.opponentData)
 
     const withCaps = useSelector(state => state.settings.withCaps)
     const withPunc = useSelector(state => state.settings.withPunc)
@@ -112,11 +115,11 @@ export default function () {
         })
     }
 
-    function Stats() {
+    function Stats({ sp, acc }) {
         return (
             <div className={styles.statCtn}>
                 <div className={`${styles.speedCtn} ${styles.alignBtmCtn}`}>
-                    <span className={`${styles.speedText} ${styles.alignBtmText}`}>{Math.floor(speed)}</span>
+                    <span className={`${styles.speedText} ${styles.alignBtmText}`}>{Math.floor(sp)}</span>
                     <span className={styles.speedUnit}>WPM</span>
                 </div>
                 <div className={`${styles.accCtn}`}>
@@ -127,18 +130,28 @@ export default function () {
                             (adjusted) <QuestionIcon /> 
                         </ToolTip>      
                     <div className={`${styles.accLabel}`}>Accuracy</div>
-                    <div className={`${styles.accNum}`}>{Math.floor(accuracy * 100)}<span className={styles.percent}>%</span></div>
+                    <div className={`${styles.accNum}`}>{Math.floor(acc * 100)}<span className={styles.percent}>%</span></div>
                 </div>
             </div>
         )
     }
 
+    const totalScore = speed * accuracy
+    const oppTotalScore = oppData.wpm * oppData.accuracy
+    console.log({ totalScore, oppTotalScore })
     return (
         <div className={styles.endGameCtn}>
-            <div className={styles.titleCtn}>
-                <div className={styles.title}>Stats</div>
-            </div>
-            <Stats />
+                {oppData ? (
+                <div className={styles.title}>Winner: {totalScore == oppData ? "tie" : totalScore > oppTotalScore ? "you" : oppData.name}</div>
+                ): (
+                    <div className={styles.titleCtn}>
+                        <div className={styles.title}>Stats</div>
+                    </div>
+                )}
+            {oppData && <div className={styles.namedTitle}>Your stats: </div>}
+            <Stats sp={speed} acc={accuracy}/>
+            {oppData && <div className={styles.namedTitle}>{oppData.name}'s' stats: </div>}
+            <Stats sp={oppData.wpm} acc={oppData.accuracy}/>
             <div className={styles.actionButtons}>
                 <div className={styles.createLinkCtn}>
                     <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
