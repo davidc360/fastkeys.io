@@ -136,13 +136,13 @@ export default function () {
         )
     }
 
+
     const totalScore = speed * accuracy
-    const oppTotalScore = oppData.wpm * oppData.accuracy
-    console.log({ totalScore, oppTotalScore })
+    const oppTotalScore = oppData?.wpm * oppData?.accuracy
     return (
         <div className={styles.endGameCtn}>
                 {oppData ? (
-                <div className={styles.title}>Winner: {totalScore == oppData ? "tie" : totalScore > oppTotalScore ? "you" : oppData.name}</div>
+                    <div className={styles.title}>Winner: {totalScore == oppData ? "tie" : totalScore > oppTotalScore ? "you" : oppData.name}</div>
                 ): (
                     <div className={styles.titleCtn}>
                         <div className={styles.title}>Stats</div>
@@ -150,8 +150,12 @@ export default function () {
                 )}
             {oppData && <div className={styles.namedTitle}>Your stats: </div>}
             <Stats sp={speed} acc={accuracy}/>
-            {oppData && <div className={styles.namedTitle}>{oppData.name}'s' stats: </div>}
-            <Stats sp={oppData.wpm} acc={oppData.accuracy}/>
+            {oppData && (
+                <>
+                <div className={styles.namedTitle}>{oppData.name}'s' stats: </div>
+                <Stats sp={oppData.wpm} acc={oppData.accuracy}/>
+                </>
+            )}
             <div className={styles.actionButtons}>
                 <div className={styles.createLinkCtn}>
                     <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
