@@ -25,7 +25,7 @@ const locUsername            = localStorage.getItem('username')
 
 const initialState  = {
     show             : false,
-    username         : locUsername,
+    username         : locUsername ?? '',
     numRows          : defaultNumRows,
     ignoreInc        : JSON.parse(locIgnoreInc) ?? false,
     limitInputWord   : JSON.parse(locLimitInputWord) ?? false,

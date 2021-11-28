@@ -78,6 +78,7 @@ export default function () {
         }
     }
     function createLinkFunc(e) {
+        console.log(username)
         if (username === undefined || username.length === 0) {
             nameInputRef.current.focus()
             nameInputRef.current.classList.add(styles.nameEmpty)
@@ -160,7 +161,7 @@ export default function () {
                 <div className={styles.createLinkCtn}>
                     <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
                     {gameId && <input readOnly className={`${styles.gameLink} ${styles.yourName}`} value={'https://types.ink/game/' + gameId} ref={linkRef} onClick={inputCopyLink}/>}
-                    <input className={styles.yourName} ref={nameInputRef} key={'nameinput'} type="text" value={username} onChange={updateUsername} placeholder="Your name (required)" maxLength={40} />
+                    <input className={styles.yourName} ref={nameInputRef} key={'nameinput'} type="text" value={username ?? ''} onChange={updateUsername} placeholder="Your name (required)" maxLength={40} />
                 </div>
                 <div className={styles.restartCtn} onClick={restartGame}>
                     <div>
