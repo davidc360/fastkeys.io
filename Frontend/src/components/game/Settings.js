@@ -51,6 +51,7 @@ function SettingsPane({ show }) {
         >
             <div className={styles.leftSide}>
                 <TypingModeSetting />
+                <br />
                 <WordSettings />
             </div>
             <div>
