@@ -88,7 +88,7 @@ function TypingModeSetting() {
             </div>
             <div onClick={handleLimitWord}>
                 <input type="checkbox" checked={inputLimitWord} onChange={handleLimitWord} />
-                Input is per word based
+                Space jumps to next word
             </div>
             <div onClick={handleCurrentTyped}>
                 <input type="checkbox" checked={showCurrentTyped} onChange={handleCurrentTyped} />
