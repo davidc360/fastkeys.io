@@ -8,6 +8,8 @@ import axios from "axios"
 import { wordsetToCodes } from "../shared/helpers"
 import { ImHome2 } from "react-icons/im";
 
+const DOMAIN = process.env.REACT_APP_DOMAIN || 'http://localhost:3000'
+
 export default function () {
     const username = useSelector(state => state.settings.username)
     const positionSequence = useSelector(state => state.game.positionSequence)
@@ -63,7 +65,7 @@ export default function () {
         linkRef.current.value = 'Copied!'
         clearTimeout(inputCopyTimeoutRef.current)
         inputCopyTimeoutRef.current = setTimeout(() => {
-            linkRef.current.value  = process.env.REACT_APP_DOMAIN + '/game/' + gameId
+            linkRef.current.value  = DOMAIN + '/game/' + gameId
         }, 1000)
     }
 
@@ -160,7 +162,7 @@ export default function () {
             <div className={styles.actionButtons}>
                 <div className={styles.createLinkCtn}>
                     <div className={styles.createLink} onClick={gameId === undefined ? createLinkFunc : buttonCopyLink }>{createLinkButtonText}</div>
-                    {gameId && <input readOnly className={`${styles.gameLink} ${styles.yourName}`} value={'https://types.ink/game/' + gameId} ref={linkRef} onClick={inputCopyLink}/>}
+                    {gameId && <input readOnly className={`${styles.gameLink} ${styles.yourName}`} value={DOMAIN + '/game/' + gameId} ref={linkRef} onClick={inputCopyLink}/>}
                     <input className={styles.yourName} ref={nameInputRef} key={'nameinput'} type="text" value={username ?? ''} onChange={updateUsername} placeholder="Your name (required)" maxLength={40} />
                 </div>
                 <div className={styles.restartCtn} onClick={restartGame}>
