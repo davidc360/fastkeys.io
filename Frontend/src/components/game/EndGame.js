@@ -63,7 +63,7 @@ export default function () {
         linkRef.current.value = 'Copied!'
         clearTimeout(inputCopyTimeoutRef.current)
         inputCopyTimeoutRef.current = setTimeout(() => {
-            linkRef.current.value  = 'https://types.ink/game/' + gameId
+            linkRef.current.value  = process.env.REACT_APP_DOMAIN + '/game/' + gameId
         }, 1000)
     }
 
@@ -103,7 +103,7 @@ export default function () {
             setCreateLinkButtonText('.'.repeat(length+1))
         }, 150)
 
-        axios.post('http://127.0.0.1:5000/game', {
+        axios.post(process.env.REACT_APP_BACKEND_URL + '/game', {
             username: username,
             sequence: positionSequence,
             mode: { withPunc, withCaps, timeMode },

@@ -101,7 +101,7 @@ export default function Game() {
     // set Opponent positions
     useEffect(() => {
         if (gameId !== undefined) {
-            axios.get('http://127.0.0.1:5000/game/' + gameId)
+            axios.get(process.env.REACT_APP_BACKEND_URL + '/game/' + gameId)
             .then(res => {
                 console.log(res)
                 // if game is found in db
@@ -151,7 +151,7 @@ export default function Game() {
                 <div className={styles.gameContainer}>
                     {oppData !== undefined && (
                         <div className={styles.welcomeMessage}>
-                            {oppData.name} challenged you to type ${oppData.wpm}WPM with ${oppData.accuracy * 100}% accuracy on the set of words below!
+                            <u>{oppData.name}</u> challenged you to type {oppData.wpm}WPM with {oppData.accuracy * 100}% accuracy on these words!
                         </div>
 
                     )}
