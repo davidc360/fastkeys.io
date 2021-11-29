@@ -13,7 +13,6 @@
     "axios": "^0.21.1",
     "confetti-js": "0.0.18",
     "immer": "^6.0.3",
-    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-device-detect": "^1.14.0",
     "react-dom": "^16.13.1",
@@ -22,7 +21,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.8",
+    "sass": "^1.43.5",
+    "sass-loader": "^12.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
