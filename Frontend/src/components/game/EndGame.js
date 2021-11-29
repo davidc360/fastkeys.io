@@ -155,7 +155,7 @@ export default function () {
             <Stats sp={speed} acc={accuracy}/>
             {oppData && (
                 <>
-                <div className={styles.namedTitle}>{oppData.name}'s' stats: </div>
+                <div className={styles.namedTitle}>{oppData.name}'s stats: </div>
                 <Stats sp={oppData.wpm} acc={oppData.accuracy}/>
                 </>
             )}
