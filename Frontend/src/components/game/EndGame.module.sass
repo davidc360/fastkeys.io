@@ -57,7 +57,9 @@ $TEXT-SHADOW: 2px 3px 1px var(--shadow-color)
         grid-row: 1
         grid-column: 3
         justify-self: start
-        transform: translateX(50px)
+        padding-left: 50px
+        // transform breaks child's fixed position
+        // transform: translateX(50px)
 
     // flex implementation for center in the middle
     // display: flex
@@ -169,6 +171,7 @@ table
 
 .tooltext
     text-align: initial
+    font-size: 0.8 * $FONT-SIZE
     color: #fff
     text-shadow: none
     padding: 1 * $ENDGAMEFONT 0.7 * $ENDGAMEFONT 
