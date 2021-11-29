@@ -34,7 +34,7 @@ function Settings() {
 function SettingsPane({ show }) {
     const version = useSelector(state => state.settings.version)
     const showSty = {
-        maxHeight: '8em',
+        maxHeight: '10em',
         transition: 'max-height 0.5s ease',
         overflow: 'hidden'
     }
@@ -49,7 +49,7 @@ function SettingsPane({ show }) {
             className={`${styles.settingsPane} ${show ? '' : styles.hideOverflow}`}
             style={show ? showSty : noshowSty}
         >
-            <div style={{ marginRight: '1em' }}>
+            <div className={styles.leftSide}>
                 <TypingModeSetting />
                 <WordSettings />
             </div>
@@ -81,18 +81,18 @@ function TypingModeSetting() {
     }
 
     return (
-        <div className={`${styles.typingModeSetting}`} >
-            <div onClick={handleIgnoreInc}>
-                <input type="checkbox" checked={ignoreInc} onChange={handleIgnoreInc} />
-                Ignore incorrect letters
-            </div>
+        <div className={`${styles.wordSettings}`} >
             <div onClick={handleLimitWord}>
                 <input type="checkbox" checked={inputLimitWord} onChange={handleLimitWord} />
                 Space jumps to next word
             </div>
             <div onClick={handleCurrentTyped}>
                 <input type="checkbox" checked={showCurrentTyped} onChange={handleCurrentTyped} />
-                Show typed letters
+                Show typed letters above
+            </div>
+            <div onClick={handleIgnoreInc} style={{textAlign: "left"}}>
+                <input type="checkbox" checked={ignoreInc} onChange={handleIgnoreInc} />
+                Can only type correct letters
             </div>
         </div>
     )
@@ -203,7 +203,7 @@ function WordSettings() {
     }
 
     return (
-        <div className={`${styles.typingModeSetting}`} >
+        <div className={`${styles.wordSettings}`} >
             <div onClick={handleCaps}>
                 <input type="checkbox" checked={caps} onChange={handleCaps} />
                 Capitalization

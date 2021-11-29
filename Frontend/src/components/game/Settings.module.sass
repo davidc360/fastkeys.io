@@ -2,7 +2,7 @@
 @import '../shared/animations.sass'
 
 .settingsContainer
-    // width: 100%
+    width: 100%
     // position: relative
     // padding: $FONT-SIZE
     // padding-top: $FONT-SIZE * 2
@@ -20,9 +20,10 @@
 .settingsPane
     display: flex
     flex-direction: row
+    justify-content: space-evenly
     // float: right
     margin-top: 1 * $FONT-SIZE
-    padding-right: 0.5 * $FONT-SIZE
+    // padding-right: 0.5 * $FONT-SIZE
     // position: absolute
     // top: 0
 
@@ -87,18 +88,20 @@
     align-self: flex-end
     float: right
 
-.typingModeSetting
+.wordSettings
     color: var(--text-color)
     position: relative
-    margin-bottom: 0.7em
+    // margin-bottom: 0.7em
     display: flex
     flex-direction: column
-    max-width: 10 * $FONT-SIZE
+    // max-width: 10 * $FONT-SIZE
+    align-items: center
 
     > div
-        
         font-size: 0.8 * $FONT-SIZE
 
     > div:hover
         cursor: pointer
         color: var(--text-secondary)
+
+.leftSide
