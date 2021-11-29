@@ -149,9 +149,12 @@ export default function Game() {
                 {/* if game hasn't started or is in progress, show the words on screen  */}
                 {(!gameStarted || gameInProgress) ?
                 <div className={styles.gameContainer}>
-                    <div className={styles.welcomeMessage}>
-                            { oppData !== undefined && `${oppData.name} challenged you to type ${oppData.wpm}WPM with ${oppData.accuracy * 100}% accuracy on the set of words below!`}
-                    </div>
+                    {oppData !== undefined && (
+                        <div className={styles.welcomeMessage}>
+                            {oppData.name} challenged you to type ${oppData.wpm}WPM with ${oppData.accuracy * 100}% accuracy on the set of words below!
+                        </div>
+
+                    )}
                     {/* if the first letter offset isn't set yet, don't show the arrow! */}
                     {(!gameInProgress && firstLetterOffset !== undefined) && (
                         <div className={styles.promptWrapper}>
