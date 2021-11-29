@@ -143,7 +143,7 @@ export default function () {
     return (
         <div className={styles.endGameCtn}>
                 {oppData ? (
-                    <div className={styles.title}>Winner: {totalScore == oppData ? "tie" : totalScore > oppTotalScore ? "you" : oppData.name}</div>
+                    <div className={styles.winnerTitle}>Winner: {totalScore == oppData ? "tie" : totalScore > oppTotalScore ? "you" : oppData.name}</div>
                 ): (
                     <div className={styles.titleCtn}>
                         <div className={styles.title}>Stats</div>
