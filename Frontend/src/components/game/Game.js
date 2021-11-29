@@ -155,7 +155,7 @@ export default function Game() {
                 <div className={styles.gameContainer}>
                     {oppData !== undefined && (
                         <div className={styles.welcomeMessage}>
-                            <u>{oppData.name}</u> challenged you to type {oppData.wpm}WPM with {oppData.accuracy * 100}% accuracy on these words!
+                            <u>{oppData.name}</u> challenged you to type {oppData.wpm}WPM with {oppData.accuracy * 100}% accuracy on this word set!
                         </div>
 
                     )}
