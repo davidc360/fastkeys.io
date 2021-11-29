@@ -43,6 +43,10 @@ export default produce((draft, action = {}) => {
             localStorage.setItem('timeMode', action.timeMode)
             draft.timeMode = action.timeMode
             return
+
+        case 'SET_OPP_TIME_MODE':
+            draft.timeMode = action.timeMode
+            return
         
         case SET_NUM_ROWS:
             localStorage.setItem('numRows', action.num)
@@ -84,6 +88,11 @@ export default produce((draft, action = {}) => {
             return
     }
 }, initialState)
+
+export const setOppTimeMode = (mode) => ({
+    type: 'SET_OPP_TIME_MODE',
+    timeMode: mode
+})
 
 export const setTimeMode = (secs) => ({
     type: SET_TIME_MODE,

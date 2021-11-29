@@ -123,13 +123,15 @@ function WordRowSettings() {
 
 function TimeSettings() {
     const dispatch = useDispatch()
+    const oppData = useSelector(state => state.game.opponentData)
     const gameInProgress = useSelector(state => state.game.gameInProgress)
     const timeMode = useSelector(state => state.settings.timeMode)
     const sels = useSelector(state => state.settings.timeModes)
     const selIdx = sels.indexOf(timeMode)
 
     function handleSlide(e) {
-        dispatch(setTimeMode(sels[e.target.value]))
+        if(!oppData)
+            dispatch(setTimeMode(sels[e.target.value]))
     }
         
     const timeEl = useCallback((time) => {
@@ -153,7 +155,10 @@ function TimeSettings() {
     }, [])
 
     function makeTimeModeSetter(index) {
-        return () => dispatch(setTimeMode(sels[index])) 
+        return () => {
+            if(!oppData)
+                dispatch(setTimeMode(sels[index]))
+        }
     }
 
     return (
@@ -181,17 +186,20 @@ function TimeSettings() {
 }
 
 function WordSettings() {
+    const oppData = useSelector(state => state.game.opponentData)
     const dispatch = useDispatch()
     const caps = useSelector(state => state.settings.withCaps)
     const punc = useSelector(state => state.settings.withPunc)
 
 
     function handleCaps(e) {
-        dispatch(setCaps(!caps))
+        if(!oppData)
+            dispatch(setCaps(!caps))
     }
 
     function handlePunc(e) {
-        dispatch(setPunc(!punc))
+        if(!oppData)
+            dispatch(setPunc(!punc))
     }
 
     return (

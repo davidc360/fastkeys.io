@@ -12,7 +12,10 @@ import EndGame from './EndGame'
 
 import { windowIsScrollable } from '../shared/helpers'
 import { setScrollable } from '../../ducks/modules/UI'
-import { setShow as setShowSettings } from "../../ducks/modules/settings"
+import {
+    setShow as setShowSettings,
+    setOppTimeMode
+} from "../../ducks/modules/settings"
 
 import { ImArrowDown } from 'react-icons/im'
 
@@ -116,6 +119,7 @@ export default function Game() {
                     newOppData.accuracy = res.data.acc
                     dispatch(setOpponentData(newOppData))
                     dispatch(setOpponentPos(0, 0))
+                    dispatch(setOppTimeMode(newOppData.mode.timeMode))
                     // dispatch(setOppName(res.data.usr))
                     // dispatch(setOppWords(wordCodesToWords(res.data.ws)))
                     setLoadingData(false)
