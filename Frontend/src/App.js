@@ -7,9 +7,14 @@ import styles from "./App.module.sass"
 import Nav from './components/nav/Nav'
 import Game from './components/game/Game'
 
+import axios from 'axios'
+
 import { BrowserRouter, Route, Switch, useParams } from 'react-router-dom'
 
 function App() {
+    // track page views
+    axios.put(process.env.REACT_APP_BACKEND_URL + '/api/views')
+
     return (
         <Provider store={store}>
                 <BrowserRouter>
