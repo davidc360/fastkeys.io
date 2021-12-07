@@ -17,6 +17,15 @@
     padding-left: 20%
     padding-right: 20%
     padding-bottom: 7vh
+    animation: red-fade 2.3s ease-in forwards
+    
+@keyframes red-fade
+    0% 
+        color: #F00
+        // transform: scale(0.4)
+    100%
+        color: var(--color-text)
+        // transform: scale(1)
 
 .promptWrapper
     position: relative
