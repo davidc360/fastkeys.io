@@ -231,8 +231,6 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 } else {
                     setNewWords() 
                 }
-            } else {
-                // setNewWords()
             }
         }
     }, [gameInProgress, opponentDataLoaded])
