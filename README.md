@@ -1,4 +1,6 @@
-# A typing test game
+# Fastkey.io
+## https://fastkeys.io  
+Fastkeys.io is a typing test game that allows you to challenge your friends in typing. Type, create a link and send to your friends to challenge them!
 
 Useful metrics provided:  
 * speed  
@@ -11,7 +13,3 @@ Useful metrics provided:
 * Redux
 * React Router
 * SASS  
-
-# Live demo  
-
-https://types.ink/
