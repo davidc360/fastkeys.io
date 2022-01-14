@@ -17,14 +17,19 @@
     padding-left: 20%
     padding-right: 20%
     padding-bottom: 7vh
-    animation: red-fade 2.3s ease-in forwards
-    
+    animation: red-fade 2.3s ease-in 
+    color: var(--text-color)
+
+    @media  only screen and (max-width: 600px)
+        padding-left: 2em
+        padding-right: 2em
+
 @keyframes red-fade
     0% 
         color: #F00
         // transform: scale(0.4)
     100%
-        color: var(--color-text)
+        color: var(--text-color)
         // transform: scale(1)
 
 .promptWrapper
