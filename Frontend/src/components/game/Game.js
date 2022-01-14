@@ -39,7 +39,7 @@ import {
 } from "../../ducks/modules/game"
 
 import { useParams } from 'react-router-dom'
-import { BrowserView, MobileView } from "react-device-detect"
+// import { BrowserView, MobileView } from "react-device-detect"
 
 export default function Game() {
     const { gameId } = useParams()
@@ -147,11 +147,11 @@ export default function Game() {
 
     return (
         <>
-        <MobileView>
+        {/* <MobileView>
             Please view this on a desktop browser.
-        </MobileView>
+        </MobileView> */}
 
-        <BrowserView>
+        {/* <BrowserView> */}
                 {/* if game hasn't started or is in progress, show the words on screen  */}
                 {(!gameStarted || gameInProgress) ?
                 <div className={styles.gameContainer}>
@@ -180,7 +180,7 @@ export default function Game() {
                 // otherwise, show the end game component        
                 : <EndGame />}
                 <ScrollIndicator />
-        </BrowserView>
+        {/* </BrowserView> */}
         </>
     )
 }
