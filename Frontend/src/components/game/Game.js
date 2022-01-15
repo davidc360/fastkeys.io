@@ -519,7 +519,6 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
             if (cursorRef) cursorRef.current.classList.add(styles.blinkCursor)
         }, 500)
     }, [currentLetterPos])
-    console.log(gameInProgress)
     return (
         <div className={`${styles.wordsRow}`} ref={wordRowEl}>
             <div className={`${styles.cursor} ${gameInProgress ? "" : styles.blinkCursor}`} style={{
@@ -575,6 +574,16 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
 
             if (mspassed > 1000) clearInterval(offsetChecker)
         }, 10)
+
+        // add resize listener to update letter position
+        window.addEventListener("resize", () => {
+            // set current letter position
+            if (focus && ref.current) {
+                const pos = ref.current.getBoundingClientRect()
+                // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
+                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+            }
+        })
     }, [])
 
     return(
