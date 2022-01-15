@@ -498,34 +498,85 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
 
     const wordRowEl = useRef()
 
-    const currentLetterPos = useSelector(state => state.game.currentLetterPos)
+    const currentLetterPosTarget = useSelector(state => state.game.currentLetterPos)
+    const currentLetterXTargetRef = useRef(currentLetterPosTarget.x)
+    useEffect(() => {
+        currentLetterXTargetRef.current = currentLetterPosTarget.x
+    }, [currentLetterPosTarget])
+
+    const currentLetterX = useRef(0)
+    const currentLetterXInterval = useRef()
+    function moveCursor(timestamp) {
+        if (!cursorRef.current) return
+        if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 3) {
+            currentLetterX.current = currentLetterXTargetRef.current
+            cursorRef.current.style.left = currentLetterX.current + 'px'
+        }
+        console.log(currentLetterX.current, currentLetterXTargetRef.current)
+        if (!cursorRef.current) return
+        if (currentLetterX.current < currentLetterXTargetRef.current) {
+            if (currentLetterX.current + 3 <= currentLetterXTargetRef.current) {
+                currentLetterX.current += 3
+                cursorRef.current.style.left = currentLetterX.current + 'px'
+            }
+        } else if (currentLetterX.current > currentLetterXTargetRef.current) {
+            if (currentLetterX.current - 3 >= currentLetterXTargetRef.current) {
+                currentLetterX.current -= 3
+                cursorRef.current.style.left = currentLetterX.current + 'px'
+            }
+        }
+        if (activeRow === row)
+            window.requestAnimationFrame(moveCursor)
+    }
+    useEffect(() => {
+        if (activeRow === row)
+        window.requestAnimationFrame(moveCursor)
+    }, [activeRow])
+    useEffect(() => {
+        if (activeRow === row){
+            // cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
+            cursorRef.current.style.top = 0 + 'px'
+            if (currentLetterX.current === 0 && currentLetterPosTarget.x || !gameInProgress) {
+                currentLetterX.current = currentLetterPosTarget.x
+                cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
+            } 
+        }
+    }, [currentLetterPosTarget])
+    useEffect(() => {
+        if (activeRow === row) {
+            currentLetterX.current = currentLetterPosTarget.x
+            cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
+        }
+    }, [activeRow])
+
     // blink cursor after 1000ms inactivity
     const blinkCursorTimeout = useRef()
     const cursorRef = useRef()
-    // reset cursor animation color on theme change
-    const theme = useSelector(state => state.settings.theme)
     useEffect(() => {
-        if (cursorRef) {
+        if (!gameInProgress) return
+        if (cursorRef.current)
+            cursorRef.current.classList.remove(styles.blinkCursor)
+        clearTimeout(blinkCursorTimeout.current)
+        blinkCursorTimeout.current = setTimeout(() => {
+            // add class to cursor
+            if (cursorRef.current) cursorRef.current.classList.add(styles.blinkCursor)
+        }, 400)
+    }, [currentLetterX.current])
+
+    // reset cursor animation color on theme change
+    const theme = useSelector(state => state.UI.theme)
+    useEffect(() => {
+        if (cursorRef.current) {
             cursorRef.current.classList.remove(styles.blinkCursor)
             cursorRef.current.classList.add(styles.blinkCursor)
         }
     }, [theme])
-    useEffect(() => {
-        if (!gameInProgress) return
-        cursorRef.current.classList.remove(styles.blinkCursor)
-        clearTimeout(blinkCursorTimeout.current)
-        blinkCursorTimeout.current = setTimeout(() => {
-            // add class to cursor
-            if (cursorRef) cursorRef.current.classList.add(styles.blinkCursor)
-        }, 500)
-    }, [currentLetterPos])
     return (
         <div className={`${styles.wordsRow}`} ref={wordRowEl}>
-            <div className={`${styles.cursor} ${gameInProgress ? "" : styles.blinkCursor}`} style={{
-                left: currentLetterPos?.x,
-                top: currentLetterPos?.y,
-            }}
-            ref={cursorRef}></div>
+            {activeRow == row && 
+                <div className={`${styles.cursor} ${gameInProgress ? "" : styles.blinkCursor}`}
+                ref={cursorRef}></div>
+            }
             {wordEls}
         </div>
     )
@@ -543,7 +594,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
         if (focus) {
             const pos = ref.current.getBoundingClientRect()
             // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-            dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+            dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
         }
     }, [focus])
     // set the first letter offset for "type to start" arrow
@@ -567,23 +618,13 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
             if (focus && ref.current) {
                 const pos = ref.current.getBoundingClientRect()
                 // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+                dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
             }
 
             mspassed += 10
 
             if (mspassed > 1000) clearInterval(offsetChecker)
         }, 10)
-
-        // add resize listener to update letter position
-        window.addEventListener("resize", () => {
-            // set current letter position
-            if (focus && ref.current) {
-                const pos = ref.current.getBoundingClientRect()
-                // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
-            }
-        })
     }, [])
 
     return(

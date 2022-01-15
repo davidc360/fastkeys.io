@@ -8,9 +8,9 @@
     width: $CONTENT-WIDTH
     margin: 0 auto
     position: relative
-    margin-bottom: 4 * $FONT-SIZE
     max-width: 100%
     padding-top: 2em
+    // margin-bottom: 4 * $FONT-SIZE
 
 .topMargin
     @media screen and (min-width: 600px)
@@ -87,11 +87,13 @@ button
     align-items: flex-end
 
 .cursor
-    position: fixed
+    position: absolute
     border-left: solid 2px var(--text-color)
     box-sizing: border-box
     // padding-top: 0.5 * $FONT-SIZE
     height: 2 * $FONT-SIZE
+    margin-top: 0.5 * $FONT-SIZE
+    z-index: 100
 
 .blinkCursor
     animation: cursor-blink 1s step-end infinite
@@ -102,16 +104,19 @@ button
 .letter
     height: 100%
     line-height: 2 * $FONT-SIZE
+    transition: color 0.2s ease-out
 
 .letterFocus
     // background-color: var(--letter-focus)
 
 .letterCorrect 
-    background-color: var(--letter-correct)
+    // background-color: var(--letter-correct)
+    color: var(--text-color)
     position: relative
 
 .letterIncorrect 
-    background-color: var(--letter-incorrect)
+    // background-color: var(--letter-incorrect)
+    color: var(--letter-incorrect)
     position: relative
 
 .letterUntyped
