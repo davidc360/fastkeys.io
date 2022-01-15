@@ -47,13 +47,19 @@ const initialState = {
     positionSequence     : [],
     opponentSequence     : [],
     opponentWords        : [],
-    rowNums              : [...Array(defaultNumRows).keys()]
+    rowNums: [...Array(defaultNumRows).keys()],
+    currentLetterPos     : {},
 }
 
 const reducer = produce((draft, action = {}) => {
     switch (action.type) {
         case 'SET_FIRST_LETTER_OFFSET':
             draft.firstLetterOffset = action.offset
+            return
+        
+        case 'SET_CURRENT_LETTER_POS':
+            draft.currentLetterPos.y = action.pos.y
+            draft.currentLetterPos.x = action.pos.x
             return
 
         case START_GAME:
@@ -298,6 +304,11 @@ export const setOpponentData= data => ({
 export const setFirstLetterOffset = offset => ({
     type: 'SET_FIRST_LETTER_OFFSET',
     offset: offset
+})
+
+export const setCurrentLetterPos = (pos) => ({
+    type: "SET_CURRENT_LETTER_POS",
+    pos: pos
 })
 
 export default reducer

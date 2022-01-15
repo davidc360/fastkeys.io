@@ -35,7 +35,8 @@ import {
     setRowNums,
     setOpponentData,
     resetGame,
-    setFirstLetterOffset
+    setFirstLetterOffset,
+    setCurrentLetterPos
 } from "../../ducks/modules/game"
 
 import { useParams } from 'react-router-dom'
@@ -108,7 +109,7 @@ export default function Game() {
             // track games played
             axios.get(process.env.REACT_APP_BACKEND_URL + '/game/' + gameId)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 // if game is found in db
                 if (res.data !== null) {
                     const newOppData = {}
@@ -466,7 +467,7 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         if (!active) return
         let nextWord = nextWordEl.current?.parentNode
         let curWord = nextWordEl.current?.parentNode?.previousSibling
-        console.log(typedWords)
+        // console.log(typedWords)
         
         if (typedWords.length <= 1) return
         
@@ -496,7 +497,39 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     }, [typedWords])
 
     const wordRowEl = useRef()
-    return <div className={styles.wordsRow} ref={wordRowEl}>{wordEls}</div>
+
+    const currentLetterPos = useSelector(state => state.game.currentLetterPos)
+    // blink cursor after 1000ms inactivity
+    const blinkCursorTimeout = useRef()
+    const cursorRef = useRef()
+    // reset cursor animation color on theme change
+    const theme = useSelector(state => state.settings.theme)
+    useEffect(() => {
+        if (cursorRef) {
+            cursorRef.current.classList.remove(styles.blinkCursor)
+            cursorRef.current.classList.add(styles.blinkCursor)
+        }
+    }, [theme])
+    useEffect(() => {
+        if (!gameInProgress) return
+        cursorRef.current.classList.remove(styles.blinkCursor)
+        clearTimeout(blinkCursorTimeout.current)
+        blinkCursorTimeout.current = setTimeout(() => {
+            // add class to cursor
+            if (cursorRef) cursorRef.current.classList.add(styles.blinkCursor)
+        }, 500)
+    }, [currentLetterPos])
+    console.log(gameInProgress)
+    return (
+        <div className={`${styles.wordsRow}`} ref={wordRowEl}>
+            <div className={`${styles.cursor} ${gameInProgress ? "" : styles.blinkCursor}`} style={{
+                left: currentLetterPos?.x,
+                top: currentLetterPos?.y,
+            }}
+            ref={cursorRef}></div>
+            {wordEls}
+        </div>
+    )
 }
 
 const WordWrapper = memo(({ children }) => {
@@ -506,12 +539,20 @@ const WordWrapper = memo(({ children }) => {
 const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponentPos, oppName }, ref) => {
     const dispatch = useDispatch()
     const gameInProgress = useSelector(state => state.game.gameInProgress)
-
+    // log location if focus
+    useEffect(() => {
+        if (focus) {
+            const pos = ref.current.getBoundingClientRect()
+            // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
+            dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+        }
+    }, [focus])
+    // set the first letter offset for "type to start" arrow
     useEffect(() => {
         if (!focus) return
         if (gameInProgress) return
         
-        // get the element's left offset to calculate where the arrow needs to be
+        // get the element's left offset to calculate where the arrow needs to bea
         const letter = ref.current
 
         // sometimes the element changes position after initial render
@@ -521,9 +562,15 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
         const offsetChecker = setInterval(() => {
             const letterWidth = letter.offsetWidth
             const letterLeft = letter.parentNode.offsetLeft
+            dispatch(setFirstLetterOffset(letterLeft - 10 + letterWidth/2))
 
-            const calculateLeftPadding = letterLeft - 10 + letterWidth/2
-            dispatch(setFirstLetterOffset(calculateLeftPadding))
+            // set current letter position
+            if (focus && ref.current) {
+                const pos = ref.current.getBoundingClientRect()
+                // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
+                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+            }
+
             mspassed += 10
 
             if (mspassed > 1000) clearInterval(offsetChecker)
@@ -534,7 +581,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
         <div
             className={`${styles.letter}
                 ${text === " " ? styles.space : ""}
-                ${isCorrect === undefined ? ""
+                ${isCorrect === undefined ? styles.letterUntyped
                         : isCorrect ? styles.letterCorrect : styles.letterIncorrect
                 }
                 ${focus ? styles.letterFocus : ""}
