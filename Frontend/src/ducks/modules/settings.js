@@ -28,7 +28,7 @@ const initialState  = {
     username         : locUsername ?? '',
     numRows          : defaultNumRows,
     ignoreInc        : JSON.parse(locIgnoreInc) ?? false,
-    limitInputWord   : JSON.parse(locLimitInputWord) ?? false,
+    limitInputWord   : JSON.parse(locLimitInputWord) ?? true,
     showCurrentTyped : JSON.parse(locShowCurrentTyped) ?? false, 
     withPunc         : JSON.parse(locPunc) ?? false,
     withCaps         : JSON.parse(locCaps) ?? false,

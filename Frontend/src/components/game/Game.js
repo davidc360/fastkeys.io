@@ -534,7 +534,8 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     }, [activeRow])
     useEffect(() => {
         if (activeRow === row){
-            cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
+            // cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
+            cursorRef.current.style.top = 0 + 'px'
             if (currentLetterX.current === 0 && currentLetterPosTarget.x || !gameInProgress) {
                 currentLetterX.current = currentLetterPosTarget.x
                 cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
@@ -593,7 +594,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
         if (focus) {
             const pos = ref.current.getBoundingClientRect()
             // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-            dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+            dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
         }
     }, [focus])
     // set the first letter offset for "type to start" arrow
@@ -617,7 +618,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
             if (focus && ref.current) {
                 const pos = ref.current.getBoundingClientRect()
                 // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+                dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
             }
 
             mspassed += 10
@@ -631,7 +632,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
             if (focus && ref.current) {
                 const pos = ref.current.getBoundingClientRect()
                 // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
-                dispatch(setCurrentLetterPos({y: pos.y, x: pos.x}))
+                dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
             }
         })
     }, [])
