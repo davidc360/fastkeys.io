@@ -532,16 +532,24 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         if (activeRow === row)
         window.requestAnimationFrame(moveCursor)
     }, [activeRow])
+
     useEffect(() => {
-        if (activeRow === row){
-            // cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
-            cursorRef.current.style.top = 0 + 'px'
-            if (currentLetterX.current === 0 && currentLetterPosTarget.x || !gameInProgress) {
-                currentLetterX.current = currentLetterPosTarget.x
-                cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
-            } 
+        if (activeRow !== row) return
+        // if first word then move cursor to instandly
+        if (nextWordEl.current?.parentNode.previousSibling.previousSibling === null) { 
+            currentLetterX.current = currentLetterPosTarget.x
+            cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
         }
+        // if (activeRow === row){
+        //     // cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
+        //     cursorRef.current.style.top = 0 + 'px'
+        //     if (currentLetterX.current === 0 && currentLetterPosTarget.x || !gameInProgress) {
+        //         currentLetterX.current = currentLetterPosTarget.x
+        //         cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
+        //     } 
+        // }
     }, [currentLetterPosTarget])
+
     useEffect(() => {
         if (activeRow === row) {
             currentLetterX.current = currentLetterPosTarget.x
