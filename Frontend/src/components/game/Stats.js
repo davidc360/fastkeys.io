@@ -50,11 +50,7 @@ function Timer() {
             <div className='timer'>
                 {timeMode === 0
                         ? (<>
-                                00: <InfIcon />
-                                <div className='showStats'
-                                    onClick={ ()=>dispatch(endGame()) } >
-                                    stop
-                                </div>
+                        00: <InfIcon onClick={() => dispatch(endGame())} className="infIcon"/>
                             </>)
                     : elapsed > 0 ? secToMMSS(timeLeft) : secToMMSS(timeMode)}
             </div>
