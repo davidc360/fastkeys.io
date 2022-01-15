@@ -506,9 +506,9 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
 
     const currentLetterX = useRef(0)
     const currentLetterXInterval = useRef()
-    const prevFrame = useRef()
     function moveCursor(timestamp) {
-        if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 1) {
+        if (!cursorRef.current) return
+        if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 3) {
             currentLetterX.current = currentLetterXTargetRef.current
             cursorRef.current.style.left = currentLetterX.current + 'px'
         }
@@ -520,16 +520,13 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         } else if (currentLetterX.current > currentLetterXTargetRef.current) {
-            for(let i = 3; i >= 1; i--) {
-                if (currentLetterX.current - i >= currentLetterXTargetRef.current) {
-                    console.log(i, currentLetterX.current, currentLetterXTargetRef.current)
-                    currentLetterX.current -= i
-                    cursorRef.current.style.left = currentLetterX.current + 'px'
-                }
+            if (currentLetterX.current - 3 >= currentLetterXTargetRef.current) {
+                currentLetterX.current -= 3
+                cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         }
         if (activeRow === row)
-        window.requestAnimationFrame(moveCursor)
+            window.requestAnimationFrame(moveCursor)
     }
     useEffect(() => {
         if (activeRow === row)
@@ -562,11 +559,11 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         blinkCursorTimeout.current = setTimeout(() => {
             // add class to cursor
             if (cursorRef.current) cursorRef.current.classList.add(styles.blinkCursor)
-        }, 500)
-    }, [currentLetterX])
+        }, 400)
+    }, [currentLetterX.current])
 
     // reset cursor animation color on theme change
-    const theme = useSelector(state => state.settings.theme)
+    const theme = useSelector(state => state.UI.theme)
     useEffect(() => {
         if (cursorRef.current) {
             cursorRef.current.classList.remove(styles.blinkCursor)
