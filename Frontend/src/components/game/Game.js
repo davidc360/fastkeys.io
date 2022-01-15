@@ -508,7 +508,11 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     const currentLetterXInterval = useRef()
     const prevFrame = useRef()
     function moveCursor(timestamp) {
-        console.log(currentLetterPosTarget.x)
+        if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 1) {
+            currentLetterX.current = currentLetterXTargetRef.current
+            cursorRef.current.style.left = currentLetterX.current + 'px'
+        }
+        console.log(currentLetterX.current, currentLetterXTargetRef.current)
         if (!cursorRef.current) return
         if (currentLetterX.current < currentLetterXTargetRef.current) {
             if (currentLetterX.current + 3 <= currentLetterXTargetRef.current) {
@@ -516,9 +520,12 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         } else if (currentLetterX.current > currentLetterXTargetRef.current) {
-            if (currentLetterX.current - 3 >= currentLetterXTargetRef.current) {
-                currentLetterX.current -= 3
-                cursorRef.current.style.left = currentLetterX.current + 'px'
+            for(let i = 3; i >= 1; i--) {
+                if (currentLetterX.current - i >= currentLetterXTargetRef.current) {
+                    console.log(i, currentLetterX.current, currentLetterXTargetRef.current)
+                    currentLetterX.current -= i
+                    cursorRef.current.style.left = currentLetterX.current + 'px'
+                }
             }
         }
         if (activeRow === row)
