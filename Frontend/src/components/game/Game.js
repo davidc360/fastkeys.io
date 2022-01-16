@@ -514,6 +514,8 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     const animationFrameRef = useRef()
     function moveCursor(timestamp) {
         if (!cursorRef.current) return
+        const frameDiff = Math.abs(currentLetterX.current - currentLetterXTargetRef.current)
+        const nextFrameCount = Math.max(frameDiff/4, 3)
         if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 3) {
             currentLetterX.current = currentLetterXTargetRef.current
             cursorRef.current.style.left = currentLetterX.current + 'px'
@@ -521,13 +523,13 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         console.log(currentLetterX.current, currentLetterXTargetRef.current)
         if (!cursorRef.current) return
         if (currentLetterX.current < currentLetterXTargetRef.current) {
-            if (currentLetterX.current + 3 <= currentLetterXTargetRef.current) {
-                currentLetterX.current += 3
+            if (currentLetterX.current + nextFrameCount <= currentLetterXTargetRef.current) {
+                currentLetterX.current += nextFrameCount
                 cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         } else if (currentLetterX.current > currentLetterXTargetRef.current) {
-            if (currentLetterX.current - 3 >= currentLetterXTargetRef.current) {
-                currentLetterX.current -= 3
+            if (currentLetterX.current - nextFrameCount >= currentLetterXTargetRef.current) {
+                currentLetterX.current -= nextFrameCount
                 cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         }
