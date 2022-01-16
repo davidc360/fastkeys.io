@@ -434,7 +434,12 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                     })}
                     {(wordHasFocus && (showCurrentTyped || typedWords
                     [wi]?.length > word.length - 1)) && (
-                        <div className={styles.currentTypedWordCtn}>
+                        <div className={styles.currentTypedWordCtn}
+                            style={{
+                                left: nextWordEl.current?.parentNode.offsetLeft ?? 0,
+                                top: 0
+                            }}
+                        >
                             {curTypedWord}
                         </div>
                     )}
