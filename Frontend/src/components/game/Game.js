@@ -281,8 +281,9 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         if (e.key === 'Enter') {
             for (const timeout of opponentPosTimeoutsRef.current) {
                 clearTimeout(timeout)
+                opponentPosTimeoutsRef.current = []
             }
-            dispatch(resetGame())
+            setTimeout(() => { dispatch(resetGame()) }, 0)
         }
     }
     //set key listener

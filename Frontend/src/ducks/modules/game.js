@@ -47,7 +47,8 @@ const initialState = {
     positionSequence     : [],
     opponentSequence     : [],
     opponentWords        : [],
-    rowNums: [...Array(defaultNumRows).keys()],
+    opponentPos          : {},
+    rowNums              : [...Array(defaultNumRows).keys()],
     currentLetterPos     : {},
 }
 
