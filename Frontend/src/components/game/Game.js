@@ -506,6 +506,7 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
 
     const currentLetterX = useRef(0)
     const currentLetterXInterval = useRef()
+    const animationFrameRef = useRef()
     function moveCursor(timestamp) {
         if (!cursorRef.current) return
         if (Math.abs(currentLetterX.current - currentLetterXTargetRef.current) < 3) {
@@ -525,8 +526,8 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 cursorRef.current.style.left = currentLetterX.current + 'px'
             }
         }
-        if (activeRow === row)
-            window.requestAnimationFrame(moveCursor)
+        if (activeRow === row && currentLetterX.current !== currentLetterXTargetRef.current)
+            animationFrameRef.current = window.requestAnimationFrame(moveCursor)
     }
     useEffect(() => {
         if (activeRow === row)
@@ -540,14 +541,8 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
             currentLetterX.current = currentLetterPosTarget.x
             cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
         }
-        // if (activeRow === row){
-        //     // cursorRef.current.style.top = currentLetterPosTarget.y + 'px'
-        //     cursorRef.current.style.top = 0 + 'px'
-        //     if (currentLetterX.current === 0 && currentLetterPosTarget.x || !gameInProgress) {
-        //         currentLetterX.current = currentLetterPosTarget.x
-        //         cursorRef.current.style.left = currentLetterPosTarget.x + 'px'
-        //     } 
-        // }
+        window.cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = window.requestAnimationFrame(moveCursor)
     }, [currentLetterPosTarget])
 
     useEffect(() => {
