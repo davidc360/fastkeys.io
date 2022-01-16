@@ -35,6 +35,7 @@ import {
     setRowNums,
     setOpponentData,
     resetGame,
+    endGame,
     setFirstLetterOffset,
     setCurrentLetterPos,
 } from "../../ducks/modules/game"
@@ -284,7 +285,9 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 opponentPosTimeoutsRef.current = []
             }
             setTimeout(() => {
-                dispatch(startGame())
+                if (!gameInProgress)
+                    dispatch(startGame())
+                dispatch(endGame())
                 dispatch(resetGame())
             }, 0)
         }
