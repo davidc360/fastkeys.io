@@ -277,7 +277,14 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     const opponentPos    = useSelector(state => state.game.opponentPos)
     
     const resetTyped = () => setTypedWords([])
-    const restartGame = (e) => { if (e.key === 'Enter') dispatch(resetGame()) }
+    const restartGame = (e) => {
+        if (e.key === 'Enter') {
+            for (const timeout of opponentPosTimeoutsRef.current) {
+                clearTimeout(timeout)
+            }
+            dispatch(resetGame())
+        }
+    }
     //set key listener
     useEffect(() => {
         if (active) {
@@ -291,6 +298,7 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
         }
     })
 
+    const opponentPosTimeoutsRef = useRef([])
     function handleKeyDown(e) {
         if(!active) return
         let newWords = [...typedWords]
@@ -331,9 +339,9 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
 
                 if (oppData !== undefined) {
                     oppData.sequence.forEach(sequence => {
-                        setTimeout(() => {
+                        opponentPosTimeoutsRef.current.push(setTimeout(() => {
                             dispatch(setOpponentPos(sequence.p, sequence.r))
-                        }, sequence.t)
+                        }, sequence.t))
                     })
                 }
             }

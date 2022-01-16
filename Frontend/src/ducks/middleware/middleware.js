@@ -16,6 +16,7 @@ import {
 import { setScrollable } from '../modules/UI'
 import { SET_NUM_ROWS, SET_TIME_MODE, SET_CAPS, SET_PUNC } from '../modules/settings'
 import { windowIsScrollable } from '../../components/shared/helpers'
+import EndGame from "../../components/game/EndGame"
 
 let interval
 export default (store) => (next) => (action) => {
