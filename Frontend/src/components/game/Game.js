@@ -578,7 +578,11 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     useEffect(() => {
         if (cursorRef.current) {
             cursorRef.current.classList.remove(styles.blinkCursor)
-            cursorRef.current.classList.add(styles.blinkCursor)
+            // use settiemout because if done consecutively, 
+            // the change will be ignored
+            setTimeout(() => {
+                cursorRef.current.classList.add(styles.blinkCursor)
+            }, 0);
         }
     }, [theme])
     return (
