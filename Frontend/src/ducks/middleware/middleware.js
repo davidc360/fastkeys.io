@@ -55,6 +55,10 @@ export default (store) => (next) => (action) => {
             dispatch(updateAccuracy())
             clearInterval(interval)
             return
+
+        case "RESET_GAME":
+            clearInterval(interval)
+            return
         
         case ICR_ACTIVE_ROW:
             dispatch(addTypedToTotal())

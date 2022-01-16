@@ -36,7 +36,7 @@ import {
     setOpponentData,
     resetGame,
     setFirstLetterOffset,
-    setCurrentLetterPos
+    setCurrentLetterPos,
 } from "../../ducks/modules/game"
 
 import { useParams } from 'react-router-dom'
@@ -277,11 +277,17 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
     const opponentPos    = useSelector(state => state.game.opponentPos)
     
     const resetTyped = () => setTypedWords([])
+    const restartGame = (e) => { if (e.key === 'Enter') dispatch(resetGame()) }
     //set key listener
     useEffect(() => {
-        if (active) window.addEventListener("keydown", handleKeyDown)
+        if (active) {
+            window.addEventListener("keydown", handleKeyDown)
+            window.addEventListener("keydown", restartGame)
+        }
+
         return () => {
             window.removeEventListener("keydown", handleKeyDown)
+            window.removeEventListener("keydown", restartGame)
         }
     })
 
@@ -639,7 +645,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
 
             if (mspassed > 1000) clearInterval(offsetChecker)
         }, 10)
-    }, [])
+    }, [gameInProgress])
 
     return(
         <div
