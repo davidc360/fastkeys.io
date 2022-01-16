@@ -283,14 +283,17 @@ function WordRow({ row, shouldLoadOpponent, opponentDataLoaded }) {
                 clearTimeout(timeout)
                 opponentPosTimeoutsRef.current = []
             }
-            setTimeout(() => { dispatch(resetGame()) }, 0)
+            setTimeout(() => {
+                dispatch(startGame())
+                dispatch(resetGame())
+            }, 0)
         }
     }
     //set key listener
     useEffect(() => {
         if (active) {
-            window.addEventListener("keydown", handleKeyDown)
             window.addEventListener("keydown", restartGame)
+            window.addEventListener("keydown", handleKeyDown)
         }
 
         return () => {
@@ -625,7 +628,7 @@ const Letter = memo(forwardRef(({ text, shouldBlink, isCorrect, focus, isOpponen
             // dispatch(setCurrentLetterPos({y: ref.current.offsetTop, x: ref.current.offsetLeft}))
             dispatch(setCurrentLetterPos({y: pos.y, x: ref.current.offsetLeft}))
         }
-    }, [focus])
+    }, [focus, text])
     // set the first letter offset for "type to start" arrow
     useEffect(() => {
         if (!focus) return
