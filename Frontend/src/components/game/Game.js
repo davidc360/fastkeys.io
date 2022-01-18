@@ -105,7 +105,6 @@ export default function Game() {
     const [loadingData, setLoadingData] = useState(gameId !== undefined)
     // set Opponent positions
     useEffect(() => {
-        axios.put(process.env.REACT_APP_BACKEND_URL + '/api/views')
         if (gameId !== undefined) {
             // track games played
             axios.get(process.env.REACT_APP_BACKEND_URL + '/game/' + gameId)
